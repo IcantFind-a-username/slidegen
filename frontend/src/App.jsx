@@ -10,6 +10,10 @@ import {
 
 // Polling interval in milliseconds
 const POLL_INTERVAL = 1500;
+// Smooth animation interval
+const ANIMATION_INTERVAL = 100;
+// How much to increment per animation frame (percentage points)
+const ANIMATION_INCREMENT = 0.003;
 
 function App() {
   // Form state
@@ -18,7 +22,8 @@ function App() {
   // Job state
   const [jobId, setJobId] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);           // 后端返回的真实进度
+  const [displayProgress, setDisplayProgress] = useState(0); // 显示用的平滑进度
   const [error, setError] = useState(null);
   
   // UI state
@@ -28,13 +33,48 @@ function App() {
   
   // Polling ref
   const pollingRef = useRef(null);
+  // Animation ref
+  const animationRef = useRef(null);
 
+  // 停止动画
+  const stopAnimation = useCallback(() => {
+    if (animationRef.current) {
+      clearInterval(animationRef.current);
+      animationRef.current = null;
+    }
+  }, []);
+
+  // 停止轮询和动画
   const stopPolling = useCallback(() => {
     if (pollingRef.current) {
       clearInterval(pollingRef.current);
       pollingRef.current = null;
     }
-  }, []);
+    stopAnimation();
+  }, [stopAnimation]);
+
+  // 启动平滑动画
+  const startAnimation = useCallback(() => {
+    stopAnimation();
+    animationRef.current = setInterval(() => {
+      setDisplayProgress(prev => {
+        // 平滑递增，但不超过真实进度 + 5%，也不超过 99%
+        const maxProgress = Math.min(progress + 0.05, 0.99);
+        if (prev < maxProgress) {
+          return Math.min(prev + ANIMATION_INCREMENT, maxProgress);
+        }
+        return prev;
+      });
+    }, ANIMATION_INTERVAL);
+  }, [progress, stopAnimation]);
+
+  // 当真实进度更新时，更新显示进度的目标值
+  useEffect(() => {
+    if (progress > displayProgress) {
+      // 真实进度比显示进度高，立即跳到真实进度
+      setDisplayProgress(progress);
+    }
+  }, [progress, displayProgress]);
 
   const pollJobStatus = useCallback(async (id) => {
     try {
@@ -46,6 +86,7 @@ function App() {
         setError(status.error || 'Generation failed. Please try again.');
         stopPolling();
       } else if (status.status === 'done') {
+        setDisplayProgress(1.0); // 完成时直接设为 100%
         stopPolling();
         try {
           const reportData = await getRenderReport(id);
@@ -66,7 +107,9 @@ function App() {
     pollingRef.current = setInterval(() => {
       pollJobStatus(id);
     }, POLL_INTERVAL);
-  }, [pollJobStatus]);
+    // 启动平滑动画
+    startAnimation();
+  }, [pollJobStatus, startAnimation]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,6 +124,7 @@ function App() {
     setJobId(null);
     setJobStatus(null);
     setProgress(0);
+    setDisplayProgress(0);
     setReport(null);
     setShowReport(false);
     stopPolling();
@@ -108,6 +152,7 @@ function App() {
     setJobId(null);
     setJobStatus(null);
     setProgress(0);
+    setDisplayProgress(0);
     setError(null);
     setReport(null);
     setShowReport(false);
@@ -182,7 +227,6 @@ function App() {
                 <span className="status-indicator"></span>
                 {STATUS_LABELS[jobStatus] || jobStatus}
               </span>
-              <span className="job-id">{jobId}</span>
             </div>
 
             {isJobActive && (
@@ -190,12 +234,12 @@ function App() {
                 <div className="progress-bar">
                   <div 
                     className="progress-fill" 
-                    style={{ width: `${Math.max(progress * 100, 3)}%` }}
+                    style={{ width: `${Math.max(displayProgress * 100, 3)}%` }}
                   />
                 </div>
                 <div className="progress-text">
                   <span>{STATUS_LABELS[jobStatus]}</span>
-                  <span>{Math.round(progress * 100)}%</span>
+                  <span>{Math.round(displayProgress * 100)}%</span>
                 </div>
               </div>
             )}
@@ -228,39 +272,6 @@ function App() {
                 <button className="new-btn" onClick={handleReset}>
                   Create another presentation
                 </button>
-
-                {report && report.slides && report.slides.length > 0 && (
-                  <div className="report-section">
-                    <button 
-                      className="report-toggle"
-                      onClick={() => setShowReport(!showReport)}
-                    >
-                      <span>Render Report ({report.slides.length} items)</span>
-                      <span className={`report-toggle-icon ${showReport ? 'open' : ''}`}>▼</span>
-                    </button>
-                    
-                    {showReport && (
-                      <div className="report-content">
-                        {report.slides.map((slide, idx) => (
-                          <div key={idx} className="report-slide">
-                            <div className="report-slide-header">
-                              <span>Slide {slide.slide_id}</span>
-                              {slide.overflow_detected && (
-                                <span className="overflow-badge">Overflow</span>
-                              )}
-                            </div>
-                            {slide.actions && slide.actions.map((action, aIdx) => (
-                              <div key={aIdx} className="report-action">
-                                → {action.type}
-                                {action.to_chars && ` (truncated to ${action.to_chars} chars)`}
-                              </div>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             )}
           </div>

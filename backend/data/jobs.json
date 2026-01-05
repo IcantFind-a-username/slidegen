@@ -140,5 +140,300 @@
       "generation_time": 17.626816034317017,
       "render_time": 0.06937885284423828
     }
+  },
+  "job_b273977bef08": {
+    "job_id": "job_b273977bef08",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-05T18:31:41.472172",
+    "updated_at": "2026-01-05T18:31:41.936623",
+    "error": null,
+    "prompt": "\u521b\u5efa\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_b273977bef08.pptx",
+    "num_slides": 6,
+    "generation_time": 0.43854737281799316,
+    "render_time": 0.018242597579956055,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 6,
+      "generation_time": 0.43854737281799316,
+      "render_time": 0.018242597579956055
+    }
+  },
+  "job_b9df07436a24": {
+    "job_id": "job_b9df07436a24",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-05T18:37:14.376283",
+    "updated_at": "2026-01-05T18:37:14.893752",
+    "error": null,
+    "prompt": "\u521b\u5efa\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_b9df07436a24.pptx",
+    "num_slides": 6,
+    "generation_time": 0.4900326728820801,
+    "render_time": 0.019146203994750977,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 6,
+      "generation_time": 0.4900326728820801,
+      "render_time": 0.019146203994750977
+    }
+  },
+  "job_fe2b9be5e1f2": {
+    "job_id": "job_fe2b9be5e1f2",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-05T18:37:37.765750",
+    "updated_at": "2026-01-05T18:37:38.075068",
+    "error": null,
+    "prompt": "\u521b\u5efa\u4e00\u4e2a\u5bc6\u7801\u5b66ppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_fe2b9be5e1f2.pptx",
+    "num_slides": 6,
+    "generation_time": 0.28738903999328613,
+    "render_time": 0.01729893684387207,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 6,
+      "generation_time": 0.28738903999328613,
+      "render_time": 0.01729893684387207
+    }
+  },
+  "job_aadc8877a581": {
+    "job_id": "job_aadc8877a581",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-05T18:39:10.253398",
+    "updated_at": "2026-01-05T18:39:10.544176",
+    "error": null,
+    "prompt": "\u521b\u5efa\u4e00\u4e2a\u5bc6\u7801\u5b66ppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_aadc8877a581.pptx",
+    "num_slides": 6,
+    "generation_time": 0.2701554298400879,
+    "render_time": 0.016077041625976562,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 6,
+      "generation_time": 0.2701554298400879,
+      "render_time": 0.016077041625976562
+    }
+  },
+  "job_017d38fe5d21": {
+    "job_id": "job_017d38fe5d21",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-05T18:42:14.640462",
+    "updated_at": "2026-01-05T18:42:14.917204",
+    "error": null,
+    "prompt": "\u521b\u5efa\u4e00\u4e2a\u5bc6\u7801\u5b66ppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_017d38fe5d21.pptx",
+    "num_slides": 6,
+    "generation_time": 0.25520873069763184,
+    "render_time": 0.016367673873901367,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 6,
+      "generation_time": 0.25520873069763184,
+      "render_time": 0.016367673873901367
+    }
   }
 }

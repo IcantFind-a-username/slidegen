@@ -150,26 +150,34 @@ class PipelineRunner:
         """
         Step 1: Generate slide JSON from prompt
         
-        TODO: If your LLMService has a different function signature,
-        update this method accordingly.
+        使用进度回调实时更新生成进度
         """
-        self._update_status(JobStatus.GENERATING_JSON, 0.1)
+        self._update_status(JobStatus.GENERATING_JSON, 0.05)
         
         start = time.time()
         
+        # 进度回调函数，将 LLM 生成进度 (0-0.9) 映射到总进度 (0.05-0.5)
+        def llm_progress_callback(progress: float, stage: str):
+            # LLM 阶段占总进度的 5%-50%，即 45% 的范围
+            # progress 范围是 0.0-0.9，映射到 0.05-0.50
+            mapped_progress = 0.05 + progress * 0.50
+            self._update_status(JobStatus.GENERATING_JSON, mapped_progress)
+            print(f"[LLM Progress] {stage}: {progress:.1%} -> Total: {mapped_progress:.1%}")
+        
         if LLM_AVAILABLE and generate_presentation:
             try:
-                # Call your teammate's LLM service
-                # Expected signature: generate_presentation(user_request, content_text=None)
-                # Returns: {"metadata": {...}, "slides": [...]}
-                slidedeck = generate_presentation(self.prompt)
+                # Call LLM service with progress callback
+                slidedeck = generate_presentation(
+                    self.prompt, 
+                    progress_callback=llm_progress_callback
+                )
                 
                 # Validate we got slides
                 if not slidedeck or 'slides' not in slidedeck:
                     raise ValueError("LLM returned invalid slidedeck structure")
                 
                 self.generation_time = time.time() - start
-                self._update_status(JobStatus.GENERATING_JSON, 0.5)
+                self._update_status(JobStatus.GENERATING_JSON, 0.55)
                 return slidedeck
                 
             except Exception as e:
@@ -180,17 +188,16 @@ class PipelineRunner:
         print("Using mock slidedeck data for demo")
         slidedeck = get_mock_slidedeck(self.prompt)
         self.generation_time = time.time() - start
-        self._update_status(JobStatus.GENERATING_JSON, 0.5)
+        self._update_status(JobStatus.GENERATING_JSON, 0.55)
         return slidedeck
     
     def _render_pptx(self, slidedeck: Dict[str, Any]) -> str:
         """
         Step 2: Render PPTX from slide JSON
         
-        TODO: If your engine has a different function signature,
-        update this method accordingly.
+        渲染阶段占总进度的 55%-95%
         """
-        self._update_status(JobStatus.RENDERING, 0.6)
+        self._update_status(JobStatus.RENDERING, 0.60)
         
         # Determine theme from metadata or use default
         theme = slidedeck.get('metadata', {}).get('theme', 'corporate_blue')
@@ -200,6 +207,8 @@ class PipelineRunner:
         
         start = time.time()
         
+        self._update_status(JobStatus.RENDERING, 0.70)
+        
         if ENGINE_AVAILABLE and generate_pptx:
             try:
                 # Call your teammate's PPTX engine
@@ -207,11 +216,13 @@ class PipelineRunner:
                 # Returns: {"success": True/False, "output_path": ..., ...}
                 result = generate_pptx(slidedeck, output_path, theme)
                 
+                self._update_status(JobStatus.RENDERING, 0.85)
+                
                 if not result.get('success'):
                     raise ValueError(result.get('error_message', 'Unknown render error'))
                 
                 self.render_time = time.time() - start
-                self._update_status(JobStatus.RENDERING, 0.9)
+                self._update_status(JobStatus.RENDERING, 0.95)
                 return output_path
                 
             except Exception as e:

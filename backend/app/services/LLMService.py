@@ -436,14 +436,45 @@ Output JSON only:
 
 
 #pipeline
-def generate_presentation(user_request, content_text=None):
+def generate_presentation(user_request, content_text=None, progress_callback=None):
+    """
+    生成演示文稿的主函数
+    
+    Args:
+        user_request: 用户的请求描述
+        content_text: 可选的补充内容
+        progress_callback: 可选的进度回调函数，签名为 callback(progress: float, stage: str)
+                          progress 范围 0.0-1.0，stage 是当前阶段描述
+    """
+    def report_progress(progress, stage=""):
+        if progress_callback:
+            progress_callback(progress, stage)
+    
+    # 阶段1: 解析用户意图 (5%-15%)
+    report_progress(0.05, "parsing_intent")
     intent = parse_user_intent(user_request)
+    report_progress(0.10, "intent_parsed")
+    
+    # 阶段2: 生成元数据 (15%-20%)
+    report_progress(0.15, "generating_metadata")
     metadata = generate_metadata(user_request)
+    report_progress(0.20, "metadata_generated")
+    
+    # 阶段3: 生成大纲 (20%-30%)
+    report_progress(0.22, "generating_outline")
     outline = generate_outline(intent)
+    report_progress(0.30, "outline_generated")
 
     slides = []
+    total_slides = len(outline)
 
-    for slide_type, title in outline:
+    # 阶段4: 生成每页内容 (30%-90%)
+    # 进度分配: 30% + (idx / total_slides) * 60%
+    for idx, (slide_type, title) in enumerate(outline):
+        # 计算当前进度 (30% - 90%)
+        slide_progress = 0.30 + (idx / max(total_slides, 1)) * 0.60
+        report_progress(slide_progress, f"generating_slide_{idx + 1}_of_{total_slides}")
+        
         if slide_type == "title":
             raw_title = metadata["title"]
             raw_subtitle = generate_subtitle(metadata["title"], "Opening")
@@ -455,14 +486,12 @@ def generate_presentation(user_request, content_text=None):
             })
 
         elif slide_type == "section":
-            # ===== 新增的分支 =====
             raw_subtitle = generate_subtitle(title, "Section Overview")
             slides.append({
                 "slide_type": "section",
                 "title": shorten_text_semantically(title, 50),
                 "subtitle": shorten_text_semantically(raw_subtitle, 80)
             })
-            # =====================
 
         elif slide_type == "content":
             slides.append({
@@ -487,6 +516,9 @@ def generate_presentation(user_request, content_text=None):
                 "title": shorten_text_semantically(title, 50),
                 "subtitle": shorten_text_semantically(raw_subtitle, 80)
             })
+    
+    # 阶段5: 完成 (90%)
+    report_progress(0.90, "slides_generated")
 
     return {
         "metadata": metadata,
@@ -494,24 +526,24 @@ def generate_presentation(user_request, content_text=None):
     }
 
 
-#test1
-generate_presentation(
-    user_request="Create a 8-slide to introduce blockchain"
-)
+# 测试代码只在直接运行此文件时执行
+if __name__ == "__main__":
+    #test1
+    generate_presentation(
+        user_request="Create a 8-slide to introduce blockchain"
+    )
 
+    #test2
+    generate_presentation(
+        user_request="Create a slide to introduce blockchain"
+    )
 
-#test2
-generate_presentation(
-    user_request="Create a slide to introduce blockchain"
-)
-
-
-#test3
-generate_presentation(
-    user_request="Create a 3-slide investor pitch deck",
-    content_text="""
-We are building an LLM-based slide generation system.
-Target users are consultants and students.
-Key value: time saving and structure consistency.
-"""
-)
+    #test3
+    generate_presentation(
+        user_request="Create a 3-slide investor pitch deck",
+        content_text="""
+    We are building an LLM-based slide generation system.
+    Target users are consultants and students.
+    Key value: time saving and structure consistency.
+    """
+    )
