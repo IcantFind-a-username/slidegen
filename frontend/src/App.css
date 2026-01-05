@@ -1,0 +1,642 @@
+/* =====================================================
+   SlideGen - Apple-Inspired Minimal Design
+   Clean, elegant, and sophisticated
+   ===================================================== */
+
+:root {
+  /* Apple-style Color Palette */
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f5f5f7;
+  --bg-glass: rgba(255, 255, 255, 0.72);
+  
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #a1a1a6;
+  
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-soft: rgba(0, 113, 227, 0.08);
+  
+  --success: #34c759;
+  --error: #ff3b30;
+  
+  --border-color: rgba(0, 0, 0, 0.04);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  
+  /* Typography - Apple System Fonts */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, monospace;
+  
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  
+  /* Transitions */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --transition-fast: 200ms var(--ease-out);
+  --transition-normal: 400ms var(--ease-out);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+}
+
+/* =====================================================
+   Layout
+   ===================================================== */
+
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+}
+
+/* =====================================================
+   Header - Apple Hero Style
+   ===================================================== */
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.header-logo {
+  margin-bottom: var(--space-lg);
+}
+
+.logo-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(180deg, #1d1d1f 0%, #424245 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+}
+
+.logo-icon svg {
+  width: 28px;
+  height: 28px;
+  color: white;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.header-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+}
+
+/* =====================================================
+   Main Card - Floating Glass Effect
+   ===================================================== */
+
+.main-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+/* =====================================================
+   Input Section
+   ===================================================== */
+
+.input-section {
+  margin-bottom: var(--space-lg);
+}
+
+.input-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.02em;
+}
+
+.prompt-textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: var(--space-md);
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.prompt-textarea:focus {
+  outline: none;
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 4px var(--accent-soft), inset 0 0 0 1px var(--accent);
+}
+
+.prompt-textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.prompt-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================
+   Generate Button - Apple Primary Style
+   ===================================================== */
+
+.generate-btn {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: white;
+  font-family: var(--font-primary);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform 100ms ease, opacity var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.generate-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.generate-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  display: none;
+}
+
+/* =====================================================
+   Status Section
+   ===================================================== */
+
+.status-section {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+  animation: fadeIn 0.5s var(--ease-out);
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.status-badge.queued .status-indicator {
+  background: var(--text-tertiary);
+}
+
+.status-badge.generating .status-indicator,
+.status-badge.generating_json .status-indicator,
+.status-badge.rendering .status-indicator {
+  background: var(--accent);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-badge.done .status-indicator {
+  background: var(--success);
+}
+
+.status-badge.failed .status-indicator {
+  background: var(--error);
+}
+
+.job-id {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0;
+}
+
+/* =====================================================
+   Progress Bar - Minimal Style
+   ===================================================== */
+
+.progress-container {
+  margin-bottom: var(--space-lg);
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.6s var(--ease-out);
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================
+   Loading Spinner
+   ===================================================== */
+
+.loading-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* =====================================================
+   Error Message
+   ===================================================== */
+
+.error-message {
+  background: rgba(255, 59, 48, 0.08);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  color: var(--error);
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.error-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+/* =====================================================
+   Success State
+   ===================================================== */
+
+.download-section {
+  text-align: center;
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-md);
+  background: rgba(52, 199, 89, 0.1);
+  border-radius: 50%;
+  animation: scaleIn 0.5s var(--ease-spring);
+}
+
+.success-icon svg {
+  width: 28px;
+  height: 28px;
+  color: var(--success);
+  stroke-width: 2.5;
+}
+
+.success-text {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: var(--space-lg);
+}
+
+/* Download Button */
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--text-primary);
+  border: none;
+  border-radius: 980px;
+  color: white;
+  font-family: var(--font-primary);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform 100ms ease;
+}
+
+.download-btn:hover {
+  background: #424245;
+}
+
+.download-btn:active {
+  transform: scale(0.97);
+}
+
+.download-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* New Generation Button */
+.new-btn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: var(--space-sm);
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.new-btn:hover {
+  opacity: 0.7;
+}
+
+/* =====================================================
+   Render Report - Collapsible
+   ===================================================== */
+
+.report-section {
+  margin-top: var(--space-xl);
+  text-align: left;
+}
+
+.report-toggle {
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background var(--transition-fast);
+}
+
+.report-toggle:hover {
+  background: var(--bg-primary);
+}
+
+.report-toggle-icon {
+  font-size: 0.75rem;
+  transition: transform var(--transition-fast);
+}
+
+.report-toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+.report-content {
+  margin-top: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  animation: slideDown 0.3s var(--ease-out);
+}
+
+.report-slide {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.report-slide:last-child {
+  border-bottom: none;
+}
+
+.report-slide-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.overflow-badge {
+  font-size: 0.625rem;
+  padding: 2px 6px;
+  background: rgba(255, 149, 0, 0.12);
+  color: #ff9500;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.report-action {
+  color: var(--text-tertiary);
+  margin-left: var(--space-md);
+  font-size: 0.6875rem;
+}
+
+/* =====================================================
+   Animations
+   ===================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =====================================================
+   Responsive
+   ===================================================== */
+
+@media (max-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+  
+  .app-container {
+    padding: var(--space-xl) var(--space-md);
+  }
+  
+  .main-card {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+  }
+  
+  .header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .header-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+/* =====================================================
+   Dark Mode Support (Optional)
+   ===================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #1c1c1e;
+    --bg-tertiary: #2c2c2e;
+    --bg-glass: rgba(28, 28, 30, 0.72);
+    
+    --text-primary: #f5f5f7;
+    --text-secondary: #86868b;
+    --text-tertiary: #6e6e73;
+    
+    --border-color: rgba(255, 255, 255, 0.04);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  .logo-icon {
+    background: linear-gradient(180deg, #f5f5f7 0%, #d2d2d7 100%);
+  }
+  
+  .logo-icon svg {
+    color: #1d1d1f;
+  }
+  
+  .download-btn {
+    background: #f5f5f7;
+    color: #1d1d1f;
+  }
+  
+  .download-btn:hover {
+    background: #e8e8ed;
+  }
+}
+
