@@ -1,6 +1,12 @@
 ##设置API KEY
 import os
-os.environ["OPENAI_API_KEY"] = "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"  # 替换为你的实际API密钥
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get API key from environment variable
+# DO NOT hardcode API keys in source code!
 
 def truncate(text, max_len):
     if len(text) <= max_len:
