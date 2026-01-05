@@ -1,6 +1,6 @@
 ##设置API KEY
 import os
-os.environ["OPENAI_API_KEY"] = "sk-YourAPIKeyHere"  # 替换为你的实际API密钥
+os.environ["OPENAI_API_KEY"] = "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"  # 替换为你的实际API密钥
 
 def truncate(text, max_len):
     if len(text) <= max_len:
