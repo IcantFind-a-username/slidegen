@@ -1,5 +1,6 @@
 ##设置API KEY
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -494,24 +495,22 @@ def generate_presentation(user_request, content_text=None):
     }
 
 
-#test1
-generate_presentation(
-    user_request="Create a 8-slide to introduce blockchain"
-)
+if __name__ == "__main__":
+    #test1
+    generate_presentation(
+        user_request="Create a 8-slide to introduce blockchain"
+    )
 
+    #test2
+    generate_presentation(
+        user_request="Create a slide to introduce blockchain"
+    )
 
-#test2
-generate_presentation(
-    user_request="Create a slide to introduce blockchain"
-)
-
-
-#test3
-generate_presentation(
-    user_request="Create a 3-slide investor pitch deck",
-    content_text="""
-We are building an LLM-based slide generation system.
-Target users are consultants and students.
-Key value: time saving and structure consistency.
-"""
-)
+    #test3
+    generate_presentation(
+        user_request="Create a 3-slide investor pitch deck",
+        content_text="""
+    We are building an LLM-based slide generation system.
+    Target users are consultants and students.
+    Key value: time saving and structure consistency.
+    ""
