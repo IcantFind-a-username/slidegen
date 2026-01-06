@@ -4,14 +4,21 @@ import time
 from typing import Dict, Any, List
 from pptx import Presentation
 from pptx.util import Inches
-from .renderer import SlideRenderer
 from .metrics import LayoutQualityEvaluator, MetricsResult
 from .themes import COLOR_SCHEMES, get_theme, list_themes
 from .overflow import BoundingBox
 
+# Try V2 renderer first, fallback to V1
+try:
+    from .renderer_v2 import SlideRendererV2 as SlideRenderer
+    print("✓ Using Renderer V2 (Professional Layouts)")
+except ImportError:
+    from .renderer import SlideRenderer
+    print("⚠ Using Renderer V1 (Basic)")
+
 
 class PPTXEngine:
-    """PPTX生成引擎"""
+    """PPTX生成引擎 - V2版本支持更好的视觉效果"""
     
     def __init__(self, theme: str = "corporate_blue"):
         self.theme = get_theme(theme)

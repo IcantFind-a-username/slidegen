@@ -381,5 +381,68 @@
       "generation_time": 17.969097137451172,
       "render_time": 0.03496098518371582
     }
+  },
+  "job_d84b7a1a8e7c": {
+    "job_id": "job_d84b7a1a8e7c",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:43:34.666718",
+    "updated_at": "2026-01-06T11:43:55.247154",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_d84b7a1a8e7c.pptx",
+    "num_slides": 8,
+    "generation_time": 20.518927097320557,
+    "render_time": 0.0390472412109375,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 20.518927097320557,
+      "render_time": 0.0390472412109375
+    }
+  },
+  "job_f724e3917dbe": {
+    "job_id": "job_f724e3917dbe",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:55:23.642835",
+    "updated_at": "2026-01-06T11:56:13.771346",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fd\u7684ppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_f724e3917dbe.pptx",
+    "num_slides": 9,
+    "generation_time": 50.04834485054016,
+    "render_time": 0.05406904220581055,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 50.04834485054016,
+      "render_time": 0.05406904220581055
+    }
+  },
+  "job_1f300c27ce92": {
+    "job_id": "job_1f300c27ce92",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T12:01:26.155474",
+    "updated_at": "2026-01-06T12:02:26.349934",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_1f300c27ce92.pptx",
+    "num_slides": 9,
+    "generation_time": 60.134844064712524,
+    "render_time": 0.041758060455322266,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 60.134844064712524,
+      "render_time": 0.041758060455322266
+    }
   }
 }

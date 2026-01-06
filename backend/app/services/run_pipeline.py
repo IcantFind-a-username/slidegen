@@ -24,14 +24,20 @@ from ..schemas.job_schema import JobStatus
 # Configure how to call your teammates' services
 # ============================================================
 
-# Try to import LLM service
+# Try to import LLM service (V2 preferred, fallback to V1)
 try:
-    from .LLMService import generate_presentation
+    from .LLMServiceV2 import generate_presentation
     LLM_AVAILABLE = True
-except ImportError as e:
-    print(f"Warning: LLMService not fully available: {e}")
-    LLM_AVAILABLE = False
-    generate_presentation = None
+    print("✓ Using LLMService V2 (Production-Grade)")
+except ImportError:
+    try:
+        from .LLMService import generate_presentation
+        LLM_AVAILABLE = True
+        print("⚠ Using LLMService V1 (Basic)")
+    except ImportError as e:
+        print(f"Warning: LLMService not available: {e}")
+        LLM_AVAILABLE = False
+        generate_presentation = None
 
 # Try to import PPTX engine
 try:
@@ -163,9 +169,15 @@ class PipelineRunner:
     
     def _generate_slides(self) -> Dict[str, Any]:
         """
-        Step 1: Generate slide JSON from prompt
+        Step 1: Generate slide JSON from prompt using V2 pipeline
         
         Progress: 0% → 60%
+        
+        V2 Pipeline stages:
+        - 5%: Analyzing user intent
+        - 15%: Generating narrative outline  
+        - 25-55%: Generating slide content (incremental per slide)
+        - 60%: Content generation complete
         """
         # Start generating
         self._update_status(JobStatus.GENERATING_JSON, 0.05)
@@ -174,10 +186,10 @@ class PipelineRunner:
         
         if LLM_AVAILABLE and generate_presentation:
             try:
-                # Update progress during LLM call
-                self._update_status(JobStatus.GENERATING_JSON, 0.15)
+                # Update progress - analyzing intent
+                self._update_status(JobStatus.GENERATING_JSON, 0.10)
                 
-                # Call your teammate's LLM service
+                # Call V2 LLM service (handles its own logging)
                 slidedeck = generate_presentation(self.prompt)
                 
                 # Validate we got slides
@@ -186,6 +198,11 @@ class PipelineRunner:
                 
                 self.generation_time = time.time() - start
                 self._update_status(JobStatus.GENERATING_JSON, 0.60)
+                
+                # Log generation quality metrics
+                num_slides = len(slidedeck.get('slides', []))
+                print(f"✓ Generated {num_slides} slides in {self.generation_time:.2f}s")
+                
                 return slidedeck
                 
             except Exception as e:
