@@ -89,48 +89,39 @@ body {
 }
 
 /* =====================================================
-   Header - Apple Hero Style
+   Header - Apple Ultra Minimal Style
    ===================================================== */
 
 .header {
   text-align: center;
   margin-bottom: var(--space-3xl);
+  padding-top: var(--space-xl);
 }
 
-.header-logo {
-  margin-bottom: var(--space-lg);
-}
-
-.logo-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(180deg, #1d1d1f 0%, #424245 100%);
-  border-radius: var(--radius-md);
+.header-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
   margin-bottom: var(--space-md);
 }
 
-.logo-icon svg {
-  width: 28px;
-  height: 28px;
-  color: white;
-}
-
 .header h1 {
-  font-size: 3rem;
+  font-size: clamp(2.5rem, 8vw, 3.5rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
-}
-
-.header-subtitle {
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--text-secondary);
-  letter-spacing: -0.01em;
+  background: linear-gradient(
+    180deg,
+    var(--text-primary) 0%,
+    #6e6e73 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* =====================================================
@@ -140,47 +131,38 @@ body {
 .main-card {
   background: var(--bg-secondary);
   border-radius: var(--radius-xl);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-md);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
 }
 
 /* =====================================================
-   Input Section
+   Input Section - Clean Minimal
    ===================================================== */
 
 .input-section {
   margin-bottom: var(--space-lg);
 }
 
-.input-label {
-  display: block;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-sm);
-  letter-spacing: 0.02em;
-}
-
 .prompt-textarea {
   width: 100%;
-  min-height: 160px;
-  padding: var(--space-md);
+  min-height: 140px;
+  padding: var(--space-lg);
   background: var(--bg-tertiary);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   color: var(--text-primary);
   font-family: var(--font-primary);
-  font-size: 1rem;
-  line-height: 1.5;
-  resize: vertical;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  resize: none;
   transition: box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .prompt-textarea:focus {
   outline: none;
   background: var(--bg-secondary);
-  box-shadow: 0 0 0 4px var(--accent-soft), inset 0 0 0 1px var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .prompt-textarea::placeholder {
@@ -192,39 +174,36 @@ body {
   cursor: not-allowed;
 }
 
-.char-count {
-  text-align: right;
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-  margin-top: var(--space-xs);
-  font-variant-numeric: tabular-nums;
-}
-
 /* =====================================================
-   Generate Button - Apple Primary Style
+   Generate Button - Apple Minimal
    ===================================================== */
 
 .generate-btn {
   width: 100%;
-  padding: var(--space-md) var(--space-lg);
-  background: var(--accent);
+  padding: 18px var(--space-lg);
+  background-color: #0071e3;
   border: none;
-  border-radius: var(--radius-lg);
-  color: white;
+  border-radius: 14px;
+  color: #fff;
   font-family: var(--font-primary);
   font-size: 1.0625rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: 0;
   cursor: pointer;
-  transition: background var(--transition-fast), transform 100ms ease, opacity var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
 }
 
+.generate-btn span {
+  color: #fff;
+}
+
 .generate-btn:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background-color: #0077ed;
+  transform: scale(1.01);
 }
 
 .generate-btn:active:not(:disabled) {
@@ -232,7 +211,7 @@ body {
 }
 
 .generate-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.32;
   cursor: not-allowed;
 }
 
@@ -301,34 +280,65 @@ body {
 }
 
 /* =====================================================
-   Progress Bar - Minimal Style
+   Progress Bar - Animated Style
    ===================================================== */
 
 .progress-container {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .progress-bar {
-  height: 4px;
+  height: 6px;
   background: var(--bg-tertiary);
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
+  position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--accent);
-  border-radius: 2px;
+  background: linear-gradient(90deg, #0071e3, #34aadc);
+  border-radius: 3px;
   transition: width 0.15s ease-out;
+  position: relative;
+}
+
+/* Shine animation on progress bar */
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: progressShine 1.5s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
 }
 
 .progress-text {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8125rem;
+  align-items: center;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   margin-top: var(--space-sm);
-  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.progress-percent {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.8125rem;
 }
 
 /* =====================================================
@@ -379,7 +389,7 @@ body {
   width: 64px;
   height: 64px;
   margin: 0 auto var(--space-md);
-  background: rgba(52, 199, 89, 0.1);
+  background: rgba(52, 199, 89, 0.12);
   border-radius: 50%;
   animation: scaleIn 0.5s var(--ease-spring);
 }
@@ -388,12 +398,13 @@ body {
   width: 28px;
   height: 28px;
   color: var(--success);
-  stroke-width: 2.5;
 }
 
 .success-text {
-  color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-lg);
 }
 
@@ -403,21 +414,22 @@ body {
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-md) var(--space-xl);
-  background: var(--text-primary);
+  padding: 16px 32px;
+  background-color: #0071e3;
   border: none;
-  border-radius: 980px;
-  color: white;
+  border-radius: 14px;
+  color: #fff;
   font-family: var(--font-primary);
   font-size: 1.0625rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  letter-spacing: 0;
   cursor: pointer;
-  transition: background var(--transition-fast), transform 100ms ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .download-btn:hover {
-  background: #424245;
+  background-color: #0077ed;
+  transform: scale(1.02);
 }
 
 .download-btn:active {
@@ -425,8 +437,8 @@ body {
 }
 
 .download-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 /* New Generation Button */
