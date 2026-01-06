@@ -513,4 +513,4 @@ if __name__ == "__main__":
     We are building an LLM-based slide generation system.
     Target users are consultants and students.
     Key value: time saving and structure consistency.
-    ""
+    """)
