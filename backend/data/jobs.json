@@ -140,5 +140,225 @@
       "generation_time": 17.626816034317017,
       "render_time": 0.06937885284423828
     }
+  },
+  "job_00f781b4fee6": {
+    "job_id": "job_00f781b4fee6",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:01:24.961577",
+    "updated_at": "2026-01-06T11:01:47.755544",
+    "error": null,
+    "prompt": "generate some slides introducing artificial intelligence",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_00f781b4fee6.pptx",
+    "num_slides": 8,
+    "generation_time": 22.747348070144653,
+    "render_time": 0.03115081787109375,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s7",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s8",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 8,
+      "generation_time": 22.747348070144653,
+      "render_time": 0.03115081787109375
+    }
+  },
+  "job_73ef7b78f948": {
+    "job_id": "job_73ef7b78f948",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:05:37.697012",
+    "updated_at": "2026-01-06T11:06:01.593569",
+    "error": null,
+    "prompt": "generate some slides introducing artificial intelligence",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_73ef7b78f948.pptx",
+    "num_slides": 7,
+    "generation_time": 23.86483907699585,
+    "render_time": 0.024100065231323242,
+    "report": {
+      "slides": [
+        {
+          "slide_id": "s1",
+          "slide_type": "title",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s2",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s3",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s4",
+          "slide_type": "section",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s5",
+          "slide_type": "two_column",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s6",
+          "slide_type": "content",
+          "overflow_detected": false,
+          "actions": []
+        },
+        {
+          "slide_id": "s7",
+          "slide_type": "closing",
+          "overflow_detected": false,
+          "actions": []
+        }
+      ],
+      "total_slides": 7,
+      "generation_time": 23.86483907699585,
+      "render_time": 0.024100065231323242
+    }
+  },
+  "job_f37c3c6eec05": {
+    "job_id": "job_f37c3c6eec05",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:10:48.811395",
+    "updated_at": "2026-01-06T11:11:07.420641",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_f37c3c6eec05.pptx",
+    "num_slides": 7,
+    "generation_time": 18.56292486190796,
+    "render_time": 0.02794790267944336,
+    "report": {
+      "total_slides": 7,
+      "generation_time": 18.56292486190796,
+      "render_time": 0.02794790267944336
+    }
+  },
+  "job_06349755cc38": {
+    "job_id": "job_06349755cc38",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:18:41.389666",
+    "updated_at": "2026-01-06T11:18:59.538989",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_06349755cc38.pptx",
+    "num_slides": 8,
+    "generation_time": 18.103293895721436,
+    "render_time": 0.03353691101074219,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 18.103293895721436,
+      "render_time": 0.03353691101074219
+    }
+  },
+  "job_23a1ebfbfa0c": {
+    "job_id": "job_23a1ebfbfa0c",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:19:02.396201",
+    "updated_at": "2026-01-06T11:19:20.325765",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_23a1ebfbfa0c.pptx",
+    "num_slides": 8,
+    "generation_time": 17.882482290267944,
+    "render_time": 0.035459041595458984,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 17.882482290267944,
+      "render_time": 0.035459041595458984
+    }
+  },
+  "job_63362cb0e8df": {
+    "job_id": "job_63362cb0e8df",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T11:21:00.126993",
+    "updated_at": "2026-01-06T11:21:18.714446",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data/outputs/job_63362cb0e8df.pptx",
+    "num_slides": 8,
+    "generation_time": 18.54383111000061,
+    "render_time": 0.0357358455657959,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 18.54383111000061,
+      "render_time": 0.0357358455657959
+    }
   }
 }
