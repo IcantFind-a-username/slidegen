@@ -24,20 +24,39 @@ from ..schemas.job_schema import JobStatus
 # Configure how to call your teammates' services
 # ============================================================
 
-# Try to import LLM service (V2 preferred, fallback to V1)
+# Try to import LLM service (V3 preferred, then V2, fallback to V1)
 try:
-    from .LLMServiceV2 import generate_presentation
+    from .presentation_pipeline import generate_professional_presentation
     LLM_AVAILABLE = True
-    print("✓ Using LLMService V2 (Production-Grade)")
-except ImportError:
+    LLM_VERSION = 3
+    print("✓ Using LLMService V3 (Integrated Pipeline)")
+    
+    # Wrapper for backward compatibility
+    def generate_presentation(prompt: str, content_text: str = None):
+        return generate_professional_presentation(
+            user_request=prompt,
+            slide_count=8,
+            theme="corporate_blue",
+            enable_images=True  # 启用图片集成
+        )
+except ImportError as e:
+    print(f"V3 import failed: {e}")
     try:
-        from .LLMService import generate_presentation
+        from .LLMServiceV2 import generate_presentation
         LLM_AVAILABLE = True
-        print("⚠ Using LLMService V1 (Basic)")
-    except ImportError as e:
-        print(f"Warning: LLMService not available: {e}")
-        LLM_AVAILABLE = False
-        generate_presentation = None
+        LLM_VERSION = 2
+        print("✓ Using LLMService V2 (Production-Grade)")
+    except ImportError:
+        try:
+            from .LLMService import generate_presentation
+            LLM_AVAILABLE = True
+            LLM_VERSION = 1
+            print("⚠ Using LLMService V1 (Basic)")
+        except ImportError as e:
+            print(f"Warning: LLMService not available: {e}")
+            LLM_AVAILABLE = False
+            LLM_VERSION = 0
+            generate_presentation = None
 
 # Try to import PPTX engine
 try:
