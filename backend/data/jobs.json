@@ -659,5 +659,89 @@
       "generation_time": 52.91904926300049,
       "render_time": 0.06007218360900879
     }
+  },
+  "job_c54d6128bd07": {
+    "job_id": "job_c54d6128bd07",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:16:10.975372",
+    "updated_at": "2026-01-06T18:17:29.020578",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_c54d6128bd07.pptx",
+    "num_slides": 8,
+    "generation_time": 77.99452710151672,
+    "render_time": 0.03944849967956543,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 77.99452710151672,
+      "render_time": 0.03944849967956543
+    }
+  },
+  "job_2b848b1ed924": {
+    "job_id": "job_2b848b1ed924",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:24:36.746331",
+    "updated_at": "2026-01-06T18:25:37.174107",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_2b848b1ed924.pptx",
+    "num_slides": 8,
+    "generation_time": 60.38418245315552,
+    "render_time": 0.0327601432800293,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 60.38418245315552,
+      "render_time": 0.0327601432800293
+    }
+  },
+  "job_fdbfe06f639e": {
+    "job_id": "job_fdbfe06f639e",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:32:11.857868",
+    "updated_at": "2026-01-06T18:33:09.530265",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_fdbfe06f639e.pptx",
+    "num_slides": 8,
+    "generation_time": 57.62912106513977,
+    "render_time": 0.03314399719238281,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 57.62912106513977,
+      "render_time": 0.03314399719238281
+    }
+  },
+  "job_d4aacdb6683b": {
+    "job_id": "job_d4aacdb6683b",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:35:27.838047",
+    "updated_at": "2026-01-06T18:36:34.863075",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_d4aacdb6683b.pptx",
+    "num_slides": 9,
+    "generation_time": 66.97810697555542,
+    "render_time": 0.03612971305847168,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 66.97810697555542,
+      "render_time": 0.03612971305847168
+    }
   }
 }

@@ -418,9 +418,9 @@ class ProShapeFactory:
         # Bullet characters by style
         bullets = {
             'default': ['▸', '▹', '·'],
-            'numbered': ['①', '②', '③', '④', '⑤'],
-            'check': ['✓', '✓', '·'],
-            'arrow': ['→', '→', '·'],
+            'numbered': ['1.', '2.', '3.', '4.', '5.'],
+            'check': ['•', '•', '·'],
+            'arrow': ['–', '–', '·'],
         }
         bullet_chars = bullets.get(style, bullets['default'])
         
@@ -658,7 +658,8 @@ class SlideRendererPro:
         self.slide_count += 1
         
         # Route to appropriate renderer based on intent first, then slide_type
-        if intent == 'cover' or slide_type == 'title' or intent == 'vision':
+        # Only render as hero slide for actual title slides, not vision/cover intents after first slide
+        if slide_type == 'title' and self.slide_count == 1:
             return self._render_hero_slide(slide, data)
         elif intent == 'closing' or slide_type == 'closing':
             return self._render_closing_slide(slide, data)
@@ -713,13 +714,6 @@ class SlideRendererPro:
             self._lighten(self.theme.get_rgb('accent'), 0.3),
             self.theme.get_rgb('accent'),
             size=2
-        )
-        
-        # Lightbulb icon (vector) - representing ideas
-        self._create_vector_icon(
-            slide, 'lightbulb',
-            w/2 - 0.35, 1.2, 0.7,
-            self.theme.get_rgb('accent')
         )
         
         # Title with smart typography - centered like closing
@@ -846,10 +840,6 @@ class SlideRendererPro:
     def _render_standard_layout(self, slide, data: Dict):
         """Render standard content slide with professional styling and smart typography."""
         w = self.WIDTH - 2 * self.MARGIN
-        intent = data.get('intent', '')
-        
-        # Map intent to icon type
-        icon_type = INTENT_ICON_CREATORS.get(intent, 'lightbulb')
         
         # Top accent line
         self.factory.create_horizontal_line(
@@ -858,17 +848,10 @@ class SlideRendererPro:
             thickness=4
         )
         
-        # Vector icon badge (not emoji)
-        self._create_vector_icon(
-            slide, icon_type,
-            self.MARGIN, 0.3, 0.5,
-            self.theme.get_rgb('accent')
-        )
-        
         # Title with smart typography
         title = data.get('title', '')
         if title:
-            title_box = BoundingBox(self.MARGIN + 0.7, 0.25, w - 0.7, 0.9)
+            title_box = BoundingBox(self.MARGIN, 0.25, w, 0.9)
             title_result = smart_typography.fit_text_smart(
                 title, title_box,
                 base_font_size=26,
@@ -981,7 +964,7 @@ class SlideRendererPro:
                 x = self.MARGIN + col * (card_width + 0.4)
                 y = 1.7 + row * (card_height + 0.3)
                 
-                # Card background with gradient effect (lighter at bottom)
+                # Card background
                 self.factory.create_card(
                     slide,
                     BoundingBox(x, y, card_width, card_height),
@@ -989,27 +972,9 @@ class SlideRendererPro:
                     border_color=self._lighten(self.theme.get_rgb('secondary'), 0.6)
                 )
                 
-                # Vector icon (not emoji!)
-                icon_type = icon_types[i % 4]
-                self._create_vector_icon(
-                    slide, icon_type,
-                    x + 0.25, y + 0.2, 0.45,
-                    icon_colors[i % 4]
-                )
-                
-                # Card number badge
-                self.factory.create_text_box(
-                    slide,
-                    BoundingBox(x + card_width - 0.5, y + 0.15, 0.35, 0.35),
-                    f"0{i+1}",
-                    Typography.SIZES['small'],
-                    self._lighten(self.theme.get_rgb('text_dark'), 0.5),
-                    font_name=Typography.MONO
-                )
-                
                 # Card text with smart typography
                 text = point.get('text', '')
-                card_text_box = BoundingBox(x + 0.25, y + 0.85, card_width - 0.5, card_height - 1.1)
+                card_text_box = BoundingBox(x + 0.3, y + 0.4, card_width - 0.6, card_height - 0.8)
                 card_text_result = smart_typography.fit_text_smart(
                     text, card_text_box,
                     base_font_size=16,
@@ -1040,23 +1005,15 @@ class SlideRendererPro:
             self.theme.get_rgb('primary')
         )
         
-        # VS badge
-        self.factory.create_icon_circle(
-            slide, self.WIDTH/2 - 0.3, 0.4, 'VS',
-            self.theme.get_rgb('accent'),
-            self.theme.get_rgb('text_light'),
-            size=0.6
-        )
-        
-        # Title with smart typography
+        # Title with smart typography - left aligned to avoid VS overlap
         title = data.get('title', '')
         if title:
-            title_box = BoundingBox(self.MARGIN, 0.3, w, 0.8)
+            title_box = BoundingBox(self.MARGIN, 0.4, w * 0.7, 0.7)
             title_result = smart_typography.fit_text_smart(
                 title, title_box,
-                base_font_size=22,
-                min_font_size=16,
-                max_font_size=26
+                base_font_size=24,
+                min_font_size=18,
+                max_font_size=28
             )
             self.factory.create_text_box(
                 slide,
@@ -1065,7 +1022,7 @@ class SlideRendererPro:
                 title_result['font_size'],
                 self.theme.get_rgb('text_light'),
                 bold=True,
-                align=PP_ALIGN.CENTER
+                align=PP_ALIGN.LEFT
             )
         
         # Left column card
@@ -1083,7 +1040,7 @@ class SlideRendererPro:
         self.factory.create_text_box(
             slide,
             BoundingBox(self.MARGIN + 0.2, 1.8, col_width - 0.4, 0.4),
-            f"◀ {left_header[:25]}",
+            f"{left_header[:30]}",
             14,
             self.theme.get_rgb('primary'),
             bold=True,
@@ -1100,7 +1057,7 @@ class SlideRendererPro:
             item_height = min(0.95, 4.0 / max(num_items, 1))
             y_pos = 2.5
             for item in processed:
-                item_text = f"✓ {item['text']}"
+                item_text = f"• {item['text']}"
                 item_box = BoundingBox(self.MARGIN + 0.3, y_pos, col_width - 0.6, item_height)
                 item_result = smart_typography.fit_text_smart(
                     item_text, item_box,
@@ -1132,7 +1089,7 @@ class SlideRendererPro:
         self.factory.create_text_box(
             slide,
             BoundingBox(self.MARGIN + col_width + 0.8, 1.8, col_width - 0.4, 0.4),
-            f"{right_header[:25]} ▶",
+            f"{right_header[:30]}",
             14,
             self.theme.get_rgb('primary'),
             bold=True,
@@ -1148,7 +1105,7 @@ class SlideRendererPro:
             item_height = min(0.95, 4.0 / max(num_items, 1))
             y_pos = 2.5
             for item in processed:
-                item_text = f"✓ {item['text']}"
+                item_text = f"• {item['text']}"
                 item_box = BoundingBox(self.MARGIN + col_width + 0.9, y_pos, col_width - 0.6, item_height)
                 item_result = smart_typography.fit_text_smart(
                     item_text, item_box,
@@ -1178,17 +1135,10 @@ class SlideRendererPro:
             thickness=4
         )
         
-        # Vector chart icon
-        self._create_vector_icon(
-            slide, 'chart_bars',
-            self.MARGIN, 0.25, 0.55,
-            self.theme.get_rgb('accent')
-        )
-        
         # Title with smart typography
         title = data.get('title', '')
         if title:
-            title_box = BoundingBox(self.MARGIN + 0.75, 0.25, w - 1, 0.8)
+            title_box = BoundingBox(self.MARGIN, 0.25, w, 0.8)
             title_result = smart_typography.fit_text_smart(
                 title, title_box,
                 base_font_size=26,
@@ -1205,14 +1155,29 @@ class SlideRendererPro:
                 font_name=Typography.HEADING
             )
         
-        # Metrics boxes
+        # Metrics boxes - larger and vertically centered
         points = data.get('body_points') or []
         if points:
-            box_width = 2.8
-            box_height = 1.6
             num_boxes = min(len(points), 4)
-            total_width = num_boxes * box_width + (num_boxes - 1) * 0.3
+            # Adaptive sizing based on number of boxes
+            if num_boxes <= 2:
+                box_width = 5.0
+                box_height = 3.2
+                gap = 1.0
+            elif num_boxes == 3:
+                box_width = 3.8
+                box_height = 3.0
+                gap = 0.6
+            else:
+                box_width = 3.0
+                box_height = 2.8
+                gap = 0.5
+            
+            total_width = num_boxes * box_width + (num_boxes - 1) * gap
             start_x = (self.WIDTH - total_width) / 2
+            # Vertically center the boxes (slide height ~7.5, title takes ~1.2)
+            available_height = self.HEIGHT - 1.5  # 6.0 inches available
+            start_y = 1.5 + (available_height - box_height) / 2  # Center vertically
             
             colors = [
                 self.theme.get_rgb('primary'),
@@ -1227,34 +1192,35 @@ class SlideRendererPro:
                 parts = text.split(':')
                 if len(parts) >= 2:
                     number = parts[0].strip()
-                    label = ':'.join(parts[1:]).strip()  # Handle multiple colons
+                    label = ':'.join(parts[1:]).strip()
                 else:
                     number = f"#{i+1}"
                     label = text
                 
-                x = start_x + i * (box_width + 0.3)
+                x = start_x + i * (box_width + gap)
                 self.factory.create_stat_box(
-                    slide, x, 1.8, box_width, box_height,
+                    slide, x, start_y, box_width, box_height,
                     number, label,
                     self._lighten(colors[i], 0.85),
                     colors[i],
                     self.theme.get_rgb('text_dark')
                 )
             
-            # Supporting text below metrics
+            # Supporting text below metrics - if there's room
             if len(points) > 4:
                 remaining = points[4:]
-                y = 4.0
-                for p in remaining[:3]:
+                y = start_y + box_height + 0.8
+                for p in remaining[:2]:
                     text = p.get('text', '') if isinstance(p, dict) else str(p)
                     self.factory.create_text_box(
                         slide,
                         BoundingBox(self.MARGIN, y, w, 0.6),
-                        f"→ {text[:80]}",
+                        text[:100],
                         14,
-                        self.theme.get_rgb('text_dark')
+                        self.theme.get_rgb('text_dark'),
+                        align=PP_ALIGN.CENTER
                     )
-                    y += 0.7
+                    y += 0.8
         
         return slide
     
@@ -1354,30 +1320,15 @@ class SlideRendererPro:
             width=0.1
         )
         
-        # "Case Study" label
-        self.factory.create_card(
-            slide, BoundingBox(self.MARGIN, 0.3, 1.8, 0.4),
-            self._lighten(self.theme.get_rgb('accent'), 0.3)
-        )
-        self.factory.create_text_box(
-            slide,
-            BoundingBox(self.MARGIN + 0.1, 0.35, 1.6, 0.3),
-            "📋 CASE STUDY",
-            10,
-            self.theme.get_rgb('primary'),
-            bold=True,
-            align=PP_ALIGN.CENTER
-        )
-        
         # Title with smart typography
         title = data.get('title', '')
         if title:
-            title_box = BoundingBox(self.MARGIN, 0.85, w, 0.9)
+            title_box = BoundingBox(self.MARGIN, 0.4, w, 1.0)
             title_result = smart_typography.fit_text_smart(
                 title, title_box,
-                base_font_size=24,
-                min_font_size=18,
-                max_font_size=28
+                base_font_size=28,
+                min_font_size=20,
+                max_font_size=32
             )
             self.factory.create_text_box(
                 slide,
@@ -1393,16 +1344,16 @@ class SlideRendererPro:
         if points:
             # Quote bar
             self.factory.create_vertical_bar(
-                slide, self.MARGIN, 2.0, 4.5,
+                slide, self.MARGIN, 1.7, 5.0,
                 self.theme.get_rgb('accent'),
                 width=0.06
             )
             
             processed = self._process_points(points, max_items=5)
             num_points = len(processed)
-            point_height = min(1.1, 4.3 / max(num_points, 1))
+            point_height = min(1.1, 5.0 / max(num_points, 1))
             font_size = 18 if num_points <= 3 else (16 if num_points <= 4 else 14)
-            y = 2.1
+            y = 1.8
             for point in processed:
                 point_box = BoundingBox(self.MARGIN + 0.3, y, w - 0.3, point_height)
                 point_result = smart_typography.fit_text_smart(
@@ -1435,7 +1386,7 @@ class SlideRendererPro:
         title = data.get('title', 'Agenda')
         title_box = BoundingBox(self.MARGIN, 0.3, w, 0.7)
         title_result = smart_typography.fit_text_smart(
-            f"📋 {title}", title_box,
+            title, title_box,
             base_font_size=24,
             min_font_size=18,
             max_font_size=28
@@ -1521,16 +1472,9 @@ class SlideRendererPro:
             size=2
         )
         
-        # Checkmark icon (vector)
-        self._create_vector_icon(
-            slide, 'checkmark',
-            w/2 - 0.35, 1.6, 0.7,
-            self.theme.get_rgb('accent')
-        )
-        
         # Title - use smart typography to fit
         title = data.get('title', 'Thank You')
-        title_box = BoundingBox(self.MARGIN, 2.6, w - 2*self.MARGIN, 1.5)
+        title_box = BoundingBox(self.MARGIN, 2.0, w - 2*self.MARGIN, 1.5)
         title_result = smart_typography.fit_text_smart(
             title, title_box,
             base_font_size=44,

@@ -11,14 +11,14 @@ from .overflow import BoundingBox
 # Try Pro renderer first, then V2, then V1
 try:
     from .renderer_pro import SlideRendererPro as SlideRenderer
-    print("✓ Using Renderer Pro (Meeting-Ready)")
+    print("[OK] Using Renderer Pro (Meeting-Ready)")
 except ImportError:
     try:
         from .renderer_v2 import SlideRendererV2 as SlideRenderer
-        print("✓ Using Renderer V2 (Professional)")
+        print("[OK] Using Renderer V2 (Professional)")
     except ImportError:
         from .renderer import SlideRenderer
-        print("⚠ Using Renderer V1 (Basic)")
+        print("[WARN] Using Renderer V1 (Basic)")
 
 
 class PPTXEngine:

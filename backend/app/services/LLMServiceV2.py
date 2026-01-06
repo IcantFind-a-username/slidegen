@@ -794,7 +794,7 @@ Tone: {intent.get('tone', 'professional')}
         "slides": slides
     }
     
-    print(f"\n✓ Generated {len(slides)} slides successfully")
+    print(f"\n[OK] Generated {len(slides)} slides successfully")
     print("=" * 60)
     
     return result

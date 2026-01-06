@@ -29,7 +29,7 @@ try:
     from .presentation_pipeline import generate_professional_presentation
     LLM_AVAILABLE = True
     LLM_VERSION = 3
-    print("✓ Using LLMService V3 (Integrated Pipeline)")
+    print("[OK] Using LLMService V3 (Integrated Pipeline)")
     
     # Wrapper for backward compatibility
     def generate_presentation(prompt: str, content_text: str = None):
@@ -45,13 +45,13 @@ except ImportError as e:
         from .LLMServiceV2 import generate_presentation
         LLM_AVAILABLE = True
         LLM_VERSION = 2
-        print("✓ Using LLMService V2 (Production-Grade)")
+        print("[OK] Using LLMService V2 (Production-Grade)")
     except ImportError:
         try:
             from .LLMService import generate_presentation
             LLM_AVAILABLE = True
             LLM_VERSION = 1
-            print("⚠ Using LLMService V1 (Basic)")
+            print("[WARN] Using LLMService V1 (Basic)")
         except ImportError as e:
             print(f"Warning: LLMService not available: {e}")
             LLM_AVAILABLE = False
@@ -220,7 +220,7 @@ class PipelineRunner:
                 
                 # Log generation quality metrics
                 num_slides = len(slidedeck.get('slides', []))
-                print(f"✓ Generated {num_slides} slides in {self.generation_time:.2f}s")
+                print(f"[OK] Generated {num_slides} slides in {self.generation_time:.2f}s")
                 
                 return slidedeck
                 

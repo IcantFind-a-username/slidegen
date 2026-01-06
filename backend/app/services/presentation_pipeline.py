@@ -388,7 +388,7 @@ class PresentationPipeline:
         else:
             print("\n[4/4] Skipping image processing (disabled)")
         
-        print(f"\n✓ Generated {len(deck_spec.slides)} slides")
+        print(f"\n[OK] Generated {len(deck_spec.slides)} slides")
         print("=" * 60)
         
         return deck_spec
