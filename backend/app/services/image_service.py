@@ -1,16 +1,8 @@
 """
-Image Service - Automatic Image Integration
+Image Service - AI-Powered Image Generation
 
-This module handles image discovery, caching, and placement for slides.
-Images are semantically aligned with slide content based on intent and keywords.
-
-Design Principles:
-1. Images are DECORATIVE but SEMANTICALLY RELEVANT
-2. Every image has a defined ROLE (hero, illustrative, icon, decorative)
-3. Images are placed in PREDEFINED LAYOUT REGIONS
-4. Fallback to placeholder/shape when no suitable image found
-
-Author: SlideGen Team
+Generates images using DALL-E 3 for presentation slides.
+Images are semantically aligned with slide content.
 """
 
 import os
@@ -33,10 +25,6 @@ from .deck_architect import ImageRole, SlideIntent, INTENT_IMAGE_KEYWORDS
 # Image cache directory
 CACHE_DIR = Path(__file__).parent.parent.parent / "data" / "image_cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
-# Unsplash API (free tier)
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY", "")
-UNSPLASH_API_URL = "https://api.unsplash.com/search/photos"
 
 # Placeholder image dimensions by role
 IMAGE_DIMENSIONS = {
@@ -98,50 +86,6 @@ class ImageProvider:
     
     def search(self, keywords: List[str], count: int = 3) -> List[ImageSearchResult]:
         raise NotImplementedError
-
-
-class UnsplashProvider(ImageProvider):
-    """Unsplash API provider."""
-    
-    def __init__(self, access_key: str = None):
-        self.access_key = access_key or UNSPLASH_ACCESS_KEY
-    
-    def search(self, keywords: List[str], count: int = 3) -> List[ImageSearchResult]:
-        if not self.access_key:
-            return []
-        
-        query = " ".join(keywords[:3])
-        
-        try:
-            response = requests.get(
-                UNSPLASH_API_URL,
-                params={
-                    "query": query,
-                    "per_page": count,
-                    "orientation": "landscape",
-                },
-                headers={"Authorization": f"Client-ID {self.access_key}"},
-                timeout=10
-            )
-            response.raise_for_status()
-            data = response.json()
-            
-            results = []
-            for photo in data.get("results", []):
-                results.append(ImageSearchResult(
-                    url=photo["urls"]["regular"],
-                    thumbnail_url=photo["urls"]["thumb"],
-                    width=photo["width"],
-                    height=photo["height"],
-                    alt_text=photo.get("alt_description", ""),
-                    attribution=f"Photo by {photo['user']['name']} on Unsplash",
-                    source="unsplash"
-                ))
-            return results
-            
-        except Exception as e:
-            print(f"Unsplash search failed: {e}")
-            return []
 
 
 class DALLEProvider(ImageProvider):
@@ -248,7 +192,6 @@ class ImageService:
         self.enable_web_search = enable_web_search
         self.use_dalle = bool(os.getenv("OPENAI_API_KEY", ""))
         self.dalle = DALLEProvider() if self.use_dalle else None
-        self.unsplash = UnsplashProvider()
         self.placeholder = PlaceholderProvider()
         self._cache: Dict[str, ImageSpec] = {}
     
@@ -319,24 +262,13 @@ class ImageService:
         return None
     
     def _search_images(self, keywords: List[str], role: ImageRole) -> List[ImageSearchResult]:
-        """Search for images using available providers."""
+        """Search for images using DALL-E provider."""
+        search_keywords = keywords[:4]
         
-        # Use content keywords directly without adding role-specific generic terms
-        # This ensures search results are relevant to the actual slide content
-        search_keywords = keywords[:4]  # Limit to first 4 keywords for precision
-        
-        # Log what we're searching for
         print(f"[Image Search] Keywords: {search_keywords}")
         
-        # Prioritize DALL-E if available
         if self.use_dalle and self.dalle:
             results = self.dalle.search(search_keywords)
-            if results:
-                return results
-        
-        # Fallback to Unsplash
-        if self.enable_web_search:
-            results = self.unsplash.search(search_keywords)
             if results:
                 return results
         

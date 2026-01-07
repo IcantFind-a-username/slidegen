@@ -1037,5 +1037,26 @@
       "generation_time": 179.61613583564758,
       "render_time": 53.424224853515625
     }
+  },
+  "job_c53dfd43235d": {
+    "job_id": "job_c53dfd43235d",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-07T09:19:55.636641",
+    "updated_at": "2026-01-07T09:23:40.742409",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_c53dfd43235d.pptx",
+    "num_slides": 8,
+    "generation_time": 179.4979395866394,
+    "render_time": 45.59518051147461,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 179.4979395866394,
+      "render_time": 45.59518051147461
+    }
   }
 }

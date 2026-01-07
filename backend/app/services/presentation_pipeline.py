@@ -2,7 +2,7 @@
 Presentation Pipeline - Integrated Generation System
 
 This module integrates all components:
-1. LLM Content Generation (LLMServiceV2)
+1. LLM Content Generation (LLMService)
 2. Deck Architecture (deck_architect)
 3. Design System (design_system)
 4. Image Integration (image_service)
@@ -400,7 +400,7 @@ class PresentationPipeline:
         presentation_type: str
     ) -> Tuple[List[Dict], Dict]:
         """Generate structured outline using LLM."""
-        from .LLMServiceV2 import call_llm, safe_json_parse
+        from .LLMService import call_llm, safe_json_parse
         
         prompt = ENHANCED_OUTLINE_PROMPT.format(
             topic=user_request,
@@ -428,7 +428,7 @@ class PresentationPipeline:
         metadata: Dict
     ) -> List[Dict]:
         """Generate content for all slides."""
-        from .LLMServiceV2 import call_llm, safe_json_parse
+        from .LLMService import call_llm, safe_json_parse
         
         slides = []
         previous = "None"

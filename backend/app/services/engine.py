@@ -1,4 +1,4 @@
-"""PPTX Engine - 主入口"""
+"""PPTX Engine - Main Entry Point"""
 
 import time
 from typing import Dict, Any, List
@@ -22,7 +22,7 @@ except ImportError:
 
 
 class PPTXEngine:
-    """PPTX生成引擎 - V2版本支持更好的视觉效果"""
+    """PPTX Generation Engine"""
     
     def __init__(self, theme: str = "corporate_blue"):
         self.theme = get_theme(theme)
@@ -89,7 +89,7 @@ class PPTXEngine:
 
 def generate_pptx(slidedeck_json: Dict, output_path: str,
                   theme: str = "corporate_blue") -> Dict[str, Any]:
-    """便捷函数"""
+    """Convenience function for generating PPTX"""
     engine = PPTXEngine(theme=theme)
     return engine.generate(slidedeck_json, output_path)
 
