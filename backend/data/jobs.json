@@ -743,5 +743,299 @@
       "generation_time": 66.97810697555542,
       "render_time": 0.03612971305847168
     }
+  },
+  "job_7e4af7ae0ffd": {
+    "job_id": "job_7e4af7ae0ffd",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:46:50.493313",
+    "updated_at": "2026-01-06T18:47:55.113224",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_7e4af7ae0ffd.pptx",
+    "num_slides": 9,
+    "generation_time": 58.29255294799805,
+    "render_time": 6.315912961959839,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 58.29255294799805,
+      "render_time": 6.315912961959839
+    }
+  },
+  "job_bcd9bc15e6eb": {
+    "job_id": "job_bcd9bc15e6eb",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:55:24.605723",
+    "updated_at": "2026-01-06T18:56:22.739968",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_bcd9bc15e6eb.pptx",
+    "num_slides": 8,
+    "generation_time": 51.73647499084473,
+    "render_time": 6.390634298324585,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 51.73647499084473,
+      "render_time": 6.390634298324585
+    }
+  },
+  "job_dc73bb113f7a": {
+    "job_id": "job_dc73bb113f7a",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T18:59:15.417035",
+    "updated_at": "2026-01-06T19:00:27.746491",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_dc73bb113f7a.pptx",
+    "num_slides": 9,
+    "generation_time": 65.99281144142151,
+    "render_time": 6.32938289642334,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 65.99281144142151,
+      "render_time": 6.32938289642334
+    }
+  },
+  "job_14aeae31fce4": {
+    "job_id": "job_14aeae31fce4",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:03:59.201684",
+    "updated_at": "2026-01-06T19:05:14.595519",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_14aeae31fce4.pptx",
+    "num_slides": 9,
+    "generation_time": 69.69004440307617,
+    "render_time": 5.692582607269287,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 69.69004440307617,
+      "render_time": 5.692582607269287
+    }
+  },
+  "job_e8523eaa239c": {
+    "job_id": "job_e8523eaa239c",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:07:54.145013",
+    "updated_at": "2026-01-06T19:09:04.262747",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_e8523eaa239c.pptx",
+    "num_slides": 9,
+    "generation_time": 64.7511043548584,
+    "render_time": 5.355453729629517,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 64.7511043548584,
+      "render_time": 5.355453729629517
+    }
+  },
+  "job_8a206ff2ad2a": {
+    "job_id": "job_8a206ff2ad2a",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:17:30.059074",
+    "updated_at": "2026-01-06T19:18:41.412463",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_8a206ff2ad2a.pptx",
+    "num_slides": 8,
+    "generation_time": 65.63577771186829,
+    "render_time": 5.705953598022461,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 65.63577771186829,
+      "render_time": 5.705953598022461
+    }
+  },
+  "job_a17566dc3f2b": {
+    "job_id": "job_a17566dc3f2b",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:21:31.712923",
+    "updated_at": "2026-01-06T19:22:31.384579",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_a17566dc3f2b.pptx",
+    "num_slides": 8,
+    "generation_time": 54.14201545715332,
+    "render_time": 5.522284507751465,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 54.14201545715332,
+      "render_time": 5.522284507751465
+    }
+  },
+  "job_5b6fe387a3b5": {
+    "job_id": "job_5b6fe387a3b5",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:25:27.376883",
+    "updated_at": "2026-01-06T19:26:26.583581",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_5b6fe387a3b5.pptx",
+    "num_slides": 9,
+    "generation_time": 53.68387579917908,
+    "render_time": 5.51418399810791,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 53.68387579917908,
+      "render_time": 5.51418399810791
+    }
+  },
+  "job_9886c1ab931c": {
+    "job_id": "job_9886c1ab931c",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:29:09.190647",
+    "updated_at": "2026-01-06T19:30:14.825347",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_9886c1ab931c.pptx",
+    "num_slides": 9,
+    "generation_time": 59.797117471694946,
+    "render_time": 5.829848051071167,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 59.797117471694946,
+      "render_time": 5.829848051071167
+    }
+  },
+  "job_e1b11c9d1f72": {
+    "job_id": "job_e1b11c9d1f72",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T19:44:46.880356",
+    "updated_at": "2026-01-06T19:45:50.245966",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_e1b11c9d1f72.pptx",
+    "num_slides": 9,
+    "generation_time": 58.06735396385193,
+    "render_time": 5.2858922481536865,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 58.06735396385193,
+      "render_time": 5.2858922481536865
+    }
+  },
+  "job_83e7794e0689": {
+    "job_id": "job_83e7794e0689",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T20:08:03.594902",
+    "updated_at": "2026-01-06T20:09:14.646714",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_83e7794e0689.pptx",
+    "num_slides": 9,
+    "generation_time": 65.12088012695312,
+    "render_time": 5.923290967941284,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 65.12088012695312,
+      "render_time": 5.923290967941284
+    }
+  },
+  "job_d1ecfa4092a9": {
+    "job_id": "job_d1ecfa4092a9",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-06T20:14:49.947498",
+    "updated_at": "2026-01-06T20:15:48.001974",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_d1ecfa4092a9.pptx",
+    "num_slides": 8,
+    "generation_time": 52.31662940979004,
+    "render_time": 5.7257161140441895,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 52.31662940979004,
+      "render_time": 5.7257161140441895
+    }
+  },
+  "job_97fc18141fb3": {
+    "job_id": "job_97fc18141fb3",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-07T08:47:34.884952",
+    "updated_at": "2026-01-07T08:48:59.451582",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_97fc18141fb3.pptx",
+    "num_slides": 9,
+    "generation_time": 78.87176418304443,
+    "render_time": 5.680344820022583,
+    "report": {
+      "total_slides": 9,
+      "generation_time": 78.87176418304443,
+      "render_time": 5.680344820022583
+    }
+  },
+  "job_53f3e4386612": {
+    "job_id": "job_53f3e4386612",
+    "status": "done",
+    "progress": 1.0,
+    "created_at": "2026-01-07T08:52:29.308984",
+    "updated_at": "2026-01-07T08:56:22.361596",
+    "error": null,
+    "prompt": "\u751f\u6210\u4e00\u4e2a\u4eba\u5de5\u667a\u80fdppt",
+    "template_id": "default",
+    "language": "auto",
+    "density": "normal",
+    "output_path": "data\\outputs\\job_53f3e4386612.pptx",
+    "num_slides": 8,
+    "generation_time": 179.61613583564758,
+    "render_time": 53.424224853515625,
+    "report": {
+      "total_slides": 8,
+      "generation_time": 179.61613583564758,
+      "render_time": 53.424224853515625
+    }
   }
 }

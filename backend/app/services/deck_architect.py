@@ -906,10 +906,13 @@ class DeckBuilder:
         # Generate unique ID
         slide_id = self._generate_slide_id(intent)
         
-        # Get image keywords
-        base_keywords = INTENT_IMAGE_KEYWORDS.get(intent, ["business", "professional"])
+        # Get image keywords - prioritize title content over generic intent keywords
+        title_keywords = self._extract_keywords_from_title(title)
         topic_keywords = metadata.get('keywords', [])[:2]
-        image_keywords = base_keywords[:3] + topic_keywords
+        base_keywords = INTENT_IMAGE_KEYWORDS.get(intent, ["business", "professional"])
+        # Title keywords first, then topic, then base
+        image_keywords = title_keywords[:3] + topic_keywords[:2] + base_keywords[:2]
+        image_keywords = list(dict.fromkeys(image_keywords))[:5]  # Remove duplicates, limit to 5
         
         # Extract extra data for special layouts (comparison, etc.)
         extra_data = {}
@@ -1069,6 +1072,39 @@ class DeckBuilder:
             estimated_speaking_time=30,
             extra_data={},
         )
+    
+    def _extract_keywords_from_title(self, title: str) -> List[str]:
+        """Extract meaningful keywords from slide title for image search."""
+        # Common stop words to filter out
+        stop_words = {
+            'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+            'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been',
+            'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
+            'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'this',
+            'that', 'these', 'those', 'it', 'its', 'their', 'your', 'our', 'how',
+            'what', 'when', 'where', 'why', 'which', 'who', 'whom', 'whose',
+            'across', 'through', 'into', 'over', 'under', 'about', 'between',
+            'unlocking', 'transformative', 'key', 'main', 'important', 'critical',
+            'exploring', 'understanding', 'leveraging', 'driving', 'enabling',
+            'up', 'down', 'out', 'off', 'away', 'back'
+        }
+        
+        # Extract words, filter stop words, and prioritize longer meaningful words
+        words = title.lower().split()
+        keywords = []
+        
+        for word in words:
+            # Clean punctuation
+            clean_word = ''.join(c for c in word if c.isalnum())
+            
+            # Skip short words and stop words
+            if len(clean_word) > 2 and clean_word not in stop_words:
+                keywords.append(clean_word)
+        
+        # Sort by word length (longer words tend to be more specific)
+        keywords.sort(key=lambda x: -len(x))
+        
+        return keywords[:5]  # Return top 5 most meaningful keywords
     
     def _estimate_speaking_time(self, title: str, body_points: List[Dict]) -> int:
         """Estimate speaking time in seconds."""

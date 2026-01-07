@@ -282,14 +282,79 @@ INTENT_ICON_CREATORS = {
 
 
 # =============================================================================
-# WEB IMAGE INTEGRATION (Optional)
+# AI IMAGE GENERATION (DALL-E 3)
 # =============================================================================
 
-class WebImageFetcher:
-    """Fetch relevant images from free image APIs."""
+class AIImageGenerator:
+    """Generate images using DALL-E 3 for accurate, relevant illustrations."""
     
-    # Unsplash API (free tier)
-    UNSPLASH_ACCESS_KEY = os.getenv('UNSPLASH_ACCESS_KEY', '')
+    # OpenAI API key (same as LLM)
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+    
+    # Image style prompt template for PPT illustrations
+    STYLE_PROMPT = """Create a clean, modern illustration for a business presentation slide.
+Style: Minimalist, professional, flat design with soft gradients.
+Colors: Use a cohesive color palette with blues, teals, and accent colors.
+NO text, NO words, NO letters in the image.
+The image should be simple and not distracting from slide content."""
+    
+    @classmethod
+    def generate_image(cls, concept: str, width: int = 1024, height: int = 1024) -> Optional[BytesIO]:
+        """
+        Generate an image using DALL-E 3.
+        
+        Args:
+            concept: The concept/topic to illustrate
+            width: Desired width (DALL-E uses fixed sizes)
+            height: Desired height
+        
+        Returns:
+            BytesIO if successful, None otherwise
+        """
+        if not cls.OPENAI_API_KEY:
+            print("  [DALL-E] No OpenAI API key found")
+            return None
+        
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=cls.OPENAI_API_KEY)
+            
+            # Build the prompt
+            prompt = f"""Topic: {concept}
+
+{cls.STYLE_PROMPT}
+
+Create a simple, elegant visual metaphor or icon-style illustration representing this concept."""
+            
+            print(f"  [DALL-E] Generating image for: '{concept}'")
+            
+            # DALL-E 3 sizes: 1024x1024, 1792x1024, 1024x1792
+            size = "1024x1024"  # Square works best for slides
+            
+            response = client.images.generate(
+                model="dall-e-3",
+                prompt=prompt,
+                size=size,
+                quality="standard",  # "standard" is cheaper, "hd" is better
+                n=1,
+            )
+            
+            image_url = response.data[0].url
+            print(f"  [DALL-E] Generated successfully!")
+            
+            # Download the generated image
+            img_response = requests.get(image_url, timeout=30)
+            if img_response.status_code == 200:
+                return BytesIO(img_response.content)
+            
+        except Exception as e:
+            print(f"  [DALL-E] Generation failed: {e}")
+        
+        return None
+
+
+class WebImageFetcher:
+    """Fetch images - now uses DALL-E 3 as primary source."""
     
     # Fallback: use placeholder service
     PLACEHOLDER_URL = "https://picsum.photos"
@@ -298,37 +363,23 @@ class WebImageFetcher:
     def fetch_image(cls, query: str, width: int = 400, height: int = 300) -> Optional[BytesIO]:
         """
         Fetch an image related to the query.
+        Now uses DALL-E 3 for accurate, relevant images.
+        
         Returns BytesIO if successful, None otherwise.
         """
         try:
-            # Try Unsplash first if API key available
-            if cls.UNSPLASH_ACCESS_KEY:
-                return cls._fetch_unsplash(query, width, height)
-            else:
-                # Use placeholder service
-                return cls._fetch_placeholder(width, height)
+            # Use DALL-E 3 for AI-generated illustrations
+            result = AIImageGenerator.generate_image(query)
+            if result:
+                return result
+            
+            # Fallback to placeholder
+            print("  [Image] Falling back to placeholder")
+            return cls._fetch_placeholder(width, height)
+            
         except Exception as e:
-            print(f"Image fetch failed: {e}")
+            print(f"  [Image] Fetch failed: {e}")
             return None
-    
-    @classmethod
-    def _fetch_unsplash(cls, query: str, width: int, height: int) -> Optional[BytesIO]:
-        """Fetch from Unsplash API."""
-        url = f"https://api.unsplash.com/photos/random"
-        params = {
-            'query': query,
-            'w': width,
-            'h': height,
-            'client_id': cls.UNSPLASH_ACCESS_KEY
-        }
-        response = requests.get(url, params=params, timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            img_url = data['urls']['small']
-            img_response = requests.get(img_url, timeout=5)
-            if img_response.status_code == 200:
-                return BytesIO(img_response.content)
-        return None
     
     @classmethod
     def _fetch_placeholder(cls, width: int, height: int) -> Optional[BytesIO]:
@@ -629,17 +680,23 @@ class SlideRendererPro:
     - Statistics/metrics displays
     - Timeline/process views
     - Professional typography
+    - DALL-E 3 AI image generation
     """
     
     WIDTH = 13.333
     HEIGHT = 7.5
     MARGIN = 0.5
     
-    def __init__(self, theme: ThemeColorScheme):
+    # Slide intents that should have images
+    IMAGE_ENABLED_INTENTS = ['concept', 'case_study', 'vision', 'benefits', 'future']
+    
+    def __init__(self, theme: ThemeColorScheme, enable_images: bool = True):
         self.theme = theme
         self.overflow = TextOverflowEngine()
         self.factory = ProShapeFactory()
         self.slide_count = 0
+        # Use DALL-E (OpenAI) for image generation
+        self.enable_images = enable_images and bool(os.getenv('OPENAI_API_KEY', ''))
     
     def get_layout(self, slide_type: str) -> Dict[str, BoundingBox]:
         """Get layout for metrics evaluation."""
@@ -648,6 +705,129 @@ class SlideRendererPro:
             'title': BoundingBox(self.MARGIN, 0.4, w, 1.0),
             'content': BoundingBox(self.MARGIN, 1.5, w, 5.5)
         }
+    
+    def _extract_keywords_from_slide(self, data: Dict) -> List[str]:
+        """Extract relevant keywords from slide data for image search."""
+        keywords = []
+        
+        # From title - extract only meaningful content words
+        title = data.get('title', '')
+        if title:
+            # Stop words to filter out
+            stop_words = {
+                'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 
+                'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will',
+                'would', 'could', 'should', 'may', 'might', 'must', 'shall',
+                'can', 'of', 'to', 'in', 'for', 'on', 'with', 'at', 'by',
+                'from', 'as', 'into', 'through', 'during', 'before', 'after',
+                'and', 'or', 'but', 'nor', 'so', 'yet', 'both', 'either',
+                'neither', 'not', 'only', 'own', 'same', 'than', 'too', 'very',
+                # Common presentation filler words
+                'unlocking', 'transformative', 'transforming', 'key', 'main',
+                'important', 'critical', 'exploring', 'understanding', 
+                'leveraging', 'driving', 'enabling', 'how', 'why', 'what', 
+                'when', 'where', 'across', 'industries', 'overview', 
+                'introduction', 'summary', 'conclusion', 'next', 'steps', 
+                'your', 'our', 'their', 'new', 'using', 'based'
+            }
+            
+            # Important abbreviations/acronyms to preserve (case-insensitive)
+            important_terms = {'ai', 'ml', 'iot', 'api', 'saas', 'crm', 'erp', 'hr', 'it'}
+            
+            words = title.lower().replace(':', ' ').replace('-', ' ').split()
+            
+            for w in words:
+                # Keep important abbreviations regardless of length
+                if w in important_terms:
+                    keywords.append(w)
+                # Keep regular words > 2 chars that aren't stop words
+                elif w not in stop_words and len(w) > 2:
+                    keywords.append(w)
+        
+        # Prioritize: important terms first, then by length
+        def keyword_priority(w):
+            if w in {'ai', 'ml', 'iot'}:  # Tech terms get highest priority
+                return (0, -len(w))
+            return (1, -len(w))
+        
+        keywords.sort(key=keyword_priority)
+        
+        # Remove proper nouns that won't help image search (company names, etc.)
+        proper_noun_hints = {'mount', 'sinai', 'google', 'amazon', 'microsoft', 'apple', 'meta', 'tesla'}
+        keywords = [k for k in keywords if k not in proper_noun_hints]
+        
+        return keywords[:3]  # Limit to 3 keywords
+    
+    def _add_image_to_slide(self, slide, data: Dict, position: str = 'right') -> bool:
+        """
+        Add an image to the slide using DALL-E 3.
+        
+        Args:
+            slide: The PowerPoint slide
+            data: Slide data containing title and intent
+            position: 'right', 'left', 'background', or 'bottom'
+        
+        Returns:
+            True if image was added successfully
+        """
+        if not self.enable_images:
+            return False
+        
+        intent = data.get('intent', '')
+        
+        # Only add images for certain intents
+        if intent not in self.IMAGE_ENABLED_INTENTS and data.get('slide_type') != 'content':
+            return False
+        
+        keywords = self._extract_keywords_from_slide(data)
+        if not keywords:
+            return False
+        
+        # Define position specs
+        positions = {
+            'right': {'x': 8.5, 'y': 1.5, 'w': 4.3, 'h': 5.0},
+            'left': {'x': 0.5, 'y': 1.5, 'w': 4.3, 'h': 5.0},
+            'bottom': {'x': 2.0, 'y': 4.5, 'w': 9.0, 'h': 2.5},
+            'corner': {'x': 10.5, 'y': 0.3, 'w': 2.5, 'h': 2.0},
+        }
+        
+        pos = positions.get(position, positions['right'])
+        
+        # For DALL-E: use the slide title directly as the concept
+        # This gives much better context than extracted keywords
+        title = data.get('title', '')
+        intent = data.get('intent', '')
+        
+        # Create a clear concept description for DALL-E
+        if title:
+            # Clean up the title for image generation
+            query = title
+        else:
+            query = ' '.join(keywords[:3]) if keywords else 'business concept'
+        
+        try:
+            # Fetch image
+            image_bytes = WebImageFetcher.fetch_image(
+                query, 
+                width=int(pos['w'] * 100),  # Approximate pixel width
+                height=int(pos['h'] * 100)
+            )
+            
+            if image_bytes:
+                # Add image to slide
+                slide.shapes.add_picture(
+                    image_bytes,
+                    Inches(pos['x']),
+                    Inches(pos['y']),
+                    Inches(pos['w']),
+                    Inches(pos['h'])
+                )
+                print(f"  [Image] Added image for: {query}")
+                return True
+        except Exception as e:
+            print(f"  [Image] Failed to add image: {e}")
+        
+        return False
     
     def render(self, prs: Presentation, data: Dict) -> Any:
         """Render a slide with professional styling."""
@@ -673,8 +853,12 @@ class SlideRendererPro:
             return self._render_process_slide(slide, data)
         elif intent == 'case_study':
             return self._render_case_slide(slide, data)
-        elif intent in ['summary', 'call_to_action']:
-            return self._render_closing_slide(slide, data)
+        elif intent == 'summary':
+            # Summary uses standard layout with bullet points, not closing style
+            return self._render_standard_layout(slide, data)
+        elif intent == 'call_to_action':
+            # Call to action uses a distinct style
+            return self._render_standard_layout(slide, data)
         elif slide_type == 'section':
             return self._render_section_slide(slide, data)
         else:
@@ -840,6 +1024,13 @@ class SlideRendererPro:
     def _render_standard_layout(self, slide, data: Dict):
         """Render standard content slide with professional styling and smart typography."""
         w = self.WIDTH - 2 * self.MARGIN
+        intent = data.get('intent', '')
+        
+        # Check if this slide should have an image
+        has_image = self.enable_images and intent in self.IMAGE_ENABLED_INTENTS
+        
+        # Adjust content width if image will be added
+        content_width = w * 0.55 if has_image else w
         
         # Top accent line
         self.factory.create_horizontal_line(
@@ -882,22 +1073,26 @@ class SlideRendererPro:
             # Calculate adaptive font size based on number of points
             num_points = len(processed)
             if num_points <= 3:
-                font_size = 20  # Larger font for fewer items
+                font_size = 20 if not has_image else 18
             elif num_points <= 4:
-                font_size = 18
+                font_size = 18 if not has_image else 16
             elif num_points <= 5:
-                font_size = 16
+                font_size = 16 if not has_image else 14
             else:
-                font_size = 15  # Smaller for many items
+                font_size = 15 if not has_image else 13
             
             self.factory.create_styled_bullet_list(
                 slide,
-                BoundingBox(self.MARGIN, 1.5, w, 5.5),
+                BoundingBox(self.MARGIN, 1.5, content_width, 5.5),
                 processed,
                 font_size,
                 self.theme.get_rgb('text_dark'),
                 self.theme.get_rgb('accent')
             )
+        
+        # Add image if enabled
+        if has_image:
+            self._add_image_to_slide(slide, data, position='right')
         
         # Slide number
         self.factory.create_text_box(
@@ -1310,8 +1505,12 @@ class SlideRendererPro:
         return slide
     
     def _render_case_slide(self, slide, data: Dict):
-        """Render case study/example slide."""
+        """Render case study/example slide with optional image."""
         w = self.WIDTH - 2 * self.MARGIN
+        
+        # Check if image should be added
+        has_image = self.enable_images
+        content_width = w * 0.55 if has_image else w
         
         # Side accent
         self.factory.create_vertical_bar(
@@ -1353,9 +1552,11 @@ class SlideRendererPro:
             num_points = len(processed)
             point_height = min(1.1, 5.0 / max(num_points, 1))
             font_size = 18 if num_points <= 3 else (16 if num_points <= 4 else 14)
+            if has_image:
+                font_size = max(12, font_size - 2)
             y = 1.8
             for point in processed:
-                point_box = BoundingBox(self.MARGIN + 0.3, y, w - 0.3, point_height)
+                point_box = BoundingBox(self.MARGIN + 0.3, y, content_width - 0.3, point_height)
                 point_result = smart_typography.fit_text_smart(
                     point['text'], point_box,
                     base_font_size=font_size,
@@ -1370,6 +1571,10 @@ class SlideRendererPro:
                     self.theme.get_rgb('text_dark')
                 )
                 y += point_height + 0.05
+        
+        # Add image if enabled
+        if has_image:
+            self._add_image_to_slide(slide, data, position='right')
         
         return slide
     
