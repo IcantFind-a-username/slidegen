@@ -1,12 +1,14 @@
-##设置API KEY
+"""
+LLM Service - Content Generation
+
+Handles OpenAI GPT calls for generating presentation content.
+"""
+
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
-
-# Get API key from environment variable
-# DO NOT hardcode API keys in source code!
 
 def truncate(text, max_len):
     if len(text) <= max_len:
@@ -14,7 +16,6 @@ def truncate(text, max_len):
     return text[:max_len]
 
 
-##LLM调用封装
 from openai import OpenAI
 
 client = OpenAI()
@@ -32,7 +33,7 @@ def call_llm(prompt, temperature=0.3):
 
 
 
-##json鲁棒解析和自修复
+# JSON parsing with error recovery
 import json
 import re
 
@@ -57,7 +58,7 @@ def safe_json_parse(text):
 
 
 
-#语义压缩
+# Semantic text compression
 def shorten_text_semantically(text, max_len):
     if len(text) <= max_len:
         return text
@@ -80,15 +81,15 @@ Output JSON only:
     except Exception:
         pass
 
-    # 最后兜底（极少触发）
+    # Final fallback
     return text[:max_len - 3] + "..."
 
 
 
-#兜底函数
+# Extract slide count from user request
 def extract_slide_count_fallback(text):
     match = re.search(
-        r'(\d+)\s*(页|页数|张|张幻灯片|slide|slides|page|pages)',
+        r'(\d+)\s*(slide|slides|page|pages)',
         text,
         re.I
     )
@@ -98,7 +99,7 @@ def extract_slide_count_fallback(text):
 
 
 
-#用户意图分析
+# Parse user intent
 def parse_user_intent(user_request):
     prompt = f"""
 Extract presentation intent.
@@ -116,7 +117,7 @@ User request:
 """
     intent = safe_json_parse(call_llm(prompt))
 
-    # ===== 新增：页数兜底解析 =====
+    # Fallback: parse slide count from request
     if intent.get("slide_count") is None:
         fallback = extract_slide_count_fallback(user_request)
         if fallback:
@@ -149,7 +150,7 @@ User request:
 
 
 
-#让llm生成outline草案
+# Generate outline draft
 def generate_outline_with_llm(intent):
     topic = intent.get("topic") or intent.get("title") or "Presentation Topic"
     tone = intent.get("tone", "neutral")
@@ -186,7 +187,7 @@ Output JSON only:
     return parsed["outline"]
 
 
-#outline规范化
+# Normalize outline structure
 ALLOWED_SLIDE_TYPES = {
     "title", "section", "content", "two_column", "closing"
 }
@@ -203,9 +204,9 @@ def normalize_outline(outline, target_slides=None):
 
         normalized.append((slide_type, title))
 
-    # ---- 强制结构修正 ----
-
-    # 1. 确保只有一个 title（始终强制）
+    # Enforce structure rules
+    
+    # 1. Ensure single title slide
     titles = [i for i, s in enumerate(normalized) if s[0] == "title"]
     if not titles:
         normalized.insert(0, ("title", "Presentation Title"))
@@ -216,12 +217,12 @@ def normalize_outline(outline, target_slides=None):
             for i, s in enumerate(normalized)
         ]
 
-    # 2. 确保 closing（始终强制）
+    # 2. Ensure closing slide
     if not any(s[0] == "closing" for s in normalized):
         normalized.append(("closing", "Conclusion"))
 
-    # 3. 至少一个 two_column（仅当页数允许时插入）
-    if target_slides is None or target_slides >= 4:  # 新增条件：仅当 >=4页时强制
+    # 3. Ensure at least one two_column slide (if enough space)
+    if target_slides is None or target_slides >= 4:
         if not any(s[0] == "two_column" for s in normalized):
             for i, (t, _) in enumerate(normalized):
                 if t == "closing":
@@ -230,7 +231,7 @@ def normalize_outline(outline, target_slides=None):
             else:
                 normalized.append(("two_column", "Comparison"))
 
-    # 4. 页数控制（正确顺序：title -> 其他 -> closing）
+    # 4. Control total slide count (order: title -> content -> closing)
     if target_slides is not None:
         fixed = []
         title_slides = [s for s in normalized if s[0] == "title"]
@@ -242,15 +243,15 @@ def normalize_outline(outline, target_slides=None):
             if s[0] not in ("title", "section", "two_column", "closing")
         ]
 
-        # 优先放 title（第一页）
+        # Title slide first
         fixed.extend(title_slides)
 
-        # 计算剩余槽位（扣除 title 和 closing）
+        # Calculate remaining slots
         remaining_slots = target_slides - len(title_slides) - len(closing_slides)
         if remaining_slots < 0:
             remaining_slots = 0
 
-        # 放 section、two_column、content（顺序：section -> two_column -> content）
+        # Add section, two_column, content slides
         if section_slides and remaining_slots > 0:
             fixed.extend(section_slides[:remaining_slots])
             remaining_slots -= len(section_slides[:remaining_slots])
@@ -259,11 +260,11 @@ def normalize_outline(outline, target_slides=None):
             remaining_slots -= len(two_column_slides[:remaining_slots])
         if content_slides and remaining_slots > 0:
             fixed.extend(content_slides[:remaining_slots])
-        # 如果仍不足，添加 content
+        # Fill remaining with content slides
         while len(fixed) < target_slides - len(closing_slides):
             fixed.append(("content", "Additional Content"))
 
-        # closing 永远最后
+        # Closing slide last
         fixed.extend(closing_slides)
 
         normalized = fixed
@@ -289,7 +290,7 @@ def generate_outline(intent):
 
 
 
-#body_points生成(content页)
+# Generate body points for content slides
 ROLE_TO_LEVEL = {
     "main": 0,
     "support": 1,
@@ -308,7 +309,7 @@ def enforce_body_point_count(points, title, tone, min_n=4, max_n=6):
     if len(points) > max_n:
         return points[:max_n]
 
-    # 不够，用 LLM 补
+    # If not enough, generate more with LLM
     need = min_n - len(points)
 
     prompt = f"""
@@ -387,7 +388,7 @@ Output JSON only:
 
 
 
-#title/section/closing页
+# Generate title/section/closing slides
 def generate_subtitle(title, hint):
     prompt = f"""
 Generate a subtitle.
@@ -409,7 +410,7 @@ Output JSON only:
 
 
 
-#two_column页
+# Generate two_column slides
 def generate_two_column(title, content_text):
     prompt = f"""
 Generate a two-column slide.
@@ -455,7 +456,6 @@ def generate_presentation(user_request, content_text=None):
             })
 
         elif slide_type == "section":
-            # ===== 新增的分支 =====
             raw_subtitle = generate_subtitle(title, "Section Overview")
             slides.append({
                 "slide_type": "section",
@@ -494,24 +494,22 @@ def generate_presentation(user_request, content_text=None):
     }
 
 
-#test1
-generate_presentation(
-    user_request="Create a 8-slide to introduce blockchain"
-)
+if __name__ == "__main__":
+    #test1
+    generate_presentation(
+        user_request="Create a 8-slide to introduce blockchain"
+    )
 
+    #test2
+    generate_presentation(
+        user_request="Create a slide to introduce blockchain"
+    )
 
-#test2
-generate_presentation(
-    user_request="Create a slide to introduce blockchain"
-)
-
-
-#test3
-generate_presentation(
-    user_request="Create a 3-slide investor pitch deck",
-    content_text="""
-We are building an LLM-based slide generation system.
-Target users are consultants and students.
-Key value: time saving and structure consistency.
-"""
-)
+    #test3
+    generate_presentation(
+        user_request="Create a 3-slide investor pitch deck",
+        content_text="""
+    We are building an LLM-based slide generation system.
+    Target users are consultants and students.
+    Key value: time saving and structure consistency.
+    """)

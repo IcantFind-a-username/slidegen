@@ -24,14 +24,20 @@ from ..schemas.job_schema import JobStatus
 # Configure how to call your teammates' services
 # ============================================================
 
-# Try to import LLM service
-try:
-    from .LLMService import generate_presentation
-    LLM_AVAILABLE = True
-except ImportError as e:
-    print(f"Warning: LLMService not fully available: {e}")
-    LLM_AVAILABLE = False
-    generate_presentation = None
+# Import LLM service
+from .presentation_pipeline import generate_professional_presentation
+
+LLM_AVAILABLE = True
+print("[OK] Using Integrated Pipeline")
+
+# Wrapper for backward compatibility
+def generate_presentation(prompt: str, content_text: str = None):
+    return generate_professional_presentation(
+        user_request=prompt,
+        slide_count=8,
+        theme="corporate_blue",
+        enable_images=True
+    )
 
 # Try to import PPTX engine
 try:
@@ -146,22 +152,44 @@ class PipelineRunner:
         """Update job status in store"""
         job_store.set_status(self.job_id, status, progress, error)
     
+    def _simulate_progress(self, start_progress: float, end_progress: float, 
+                          duration: float, status: JobStatus):
+        """
+        Simulate smooth progress updates during a long operation.
+        Updates progress incrementally over the given duration.
+        """
+        steps = 10
+        step_duration = duration / steps
+        progress_step = (end_progress - start_progress) / steps
+        
+        for i in range(steps):
+            current_progress = start_progress + (progress_step * (i + 1))
+            self._update_status(status, min(current_progress, end_progress))
+            time.sleep(step_duration)
+    
     def _generate_slides(self) -> Dict[str, Any]:
         """
-        Step 1: Generate slide JSON from prompt
+        Step 1: Generate slide JSON from prompt using V2 pipeline
         
-        TODO: If your LLMService has a different function signature,
-        update this method accordingly.
+        Progress: 0% → 60%
+        
+        V2 Pipeline stages:
+        - 5%: Analyzing user intent
+        - 15%: Generating narrative outline  
+        - 25-55%: Generating slide content (incremental per slide)
+        - 60%: Content generation complete
         """
-        self._update_status(JobStatus.GENERATING_JSON, 0.1)
+        # Start generating
+        self._update_status(JobStatus.GENERATING_JSON, 0.05)
         
         start = time.time()
         
         if LLM_AVAILABLE and generate_presentation:
             try:
-                # Call your teammate's LLM service
-                # Expected signature: generate_presentation(user_request, content_text=None)
-                # Returns: {"metadata": {...}, "slides": [...]}
+                # Update progress - analyzing intent
+                self._update_status(JobStatus.GENERATING_JSON, 0.10)
+                
+                # Call V2 LLM service (handles its own logging)
                 slidedeck = generate_presentation(self.prompt)
                 
                 # Validate we got slides
@@ -169,28 +197,41 @@ class PipelineRunner:
                     raise ValueError("LLM returned invalid slidedeck structure")
                 
                 self.generation_time = time.time() - start
-                self._update_status(JobStatus.GENERATING_JSON, 0.5)
+                self._update_status(JobStatus.GENERATING_JSON, 0.60)
+                
+                # Log generation quality metrics
+                num_slides = len(slidedeck.get('slides', []))
+                print(f"[OK] Generated {num_slides} slides in {self.generation_time:.2f}s")
+                
                 return slidedeck
                 
             except Exception as e:
                 print(f"LLM generation failed, using mock data: {e}")
                 traceback.print_exc()
         
-        # Fallback to mock data
+        # Fallback to mock data with simulated progress
         print("Using mock slidedeck data for demo")
+        
+        # Simulate progress for demo (makes it feel more real)
+        self._update_status(JobStatus.GENERATING_JSON, 0.15)
+        time.sleep(0.3)
+        self._update_status(JobStatus.GENERATING_JSON, 0.30)
+        time.sleep(0.3)
+        self._update_status(JobStatus.GENERATING_JSON, 0.45)
+        time.sleep(0.3)
+        
         slidedeck = get_mock_slidedeck(self.prompt)
         self.generation_time = time.time() - start
-        self._update_status(JobStatus.GENERATING_JSON, 0.5)
+        self._update_status(JobStatus.GENERATING_JSON, 0.60)
         return slidedeck
     
     def _render_pptx(self, slidedeck: Dict[str, Any]) -> str:
         """
         Step 2: Render PPTX from slide JSON
         
-        TODO: If your engine has a different function signature,
-        update this method accordingly.
+        Progress: 60% → 95%
         """
-        self._update_status(JobStatus.RENDERING, 0.6)
+        self._update_status(JobStatus.RENDERING, 0.65)
         
         # Determine theme from metadata or use default
         theme = slidedeck.get('metadata', {}).get('theme', 'corporate_blue')
@@ -200,18 +241,19 @@ class PipelineRunner:
         
         start = time.time()
         
+        # Progress update before rendering
+        self._update_status(JobStatus.RENDERING, 0.70)
+        
         if ENGINE_AVAILABLE and generate_pptx:
             try:
                 # Call your teammate's PPTX engine
-                # Expected signature: generate_pptx(slidedeck_json, output_path, theme)
-                # Returns: {"success": True/False, "output_path": ..., ...}
                 result = generate_pptx(slidedeck, output_path, theme)
                 
                 if not result.get('success'):
                     raise ValueError(result.get('error_message', 'Unknown render error'))
                 
                 self.render_time = time.time() - start
-                self._update_status(JobStatus.RENDERING, 0.9)
+                self._update_status(JobStatus.RENDERING, 0.95)
                 return output_path
                 
             except Exception as e:
@@ -222,19 +264,9 @@ class PipelineRunner:
             raise RuntimeError("PPTX Engine not available")
     
     def _build_report(self, slidedeck: Dict[str, Any]) -> Dict[str, Any]:
-        """Build render report"""
-        slides_report = []
-        for i, slide in enumerate(slidedeck.get('slides', [])):
-            slides_report.append({
-                'slide_id': f"s{i+1}",
-                'slide_type': slide.get('slide_type', 'content'),
-                'overflow_detected': False,  # TODO: Get from actual overflow engine
-                'actions': []
-            })
-        
+        """Build render report (internal use only)"""
         return {
-            'slides': slides_report,
-            'total_slides': len(slides_report),
+            'total_slides': len(slidedeck.get('slides', [])),
             'generation_time': self.generation_time,
             'render_time': self.render_time
         }
@@ -245,13 +277,13 @@ class PipelineRunner:
         Returns True if successful, False if failed.
         """
         try:
-            # Step 1: Generate slides JSON
+            # Step 1: Generate slides JSON (0% → 60%)
             slidedeck = self._generate_slides()
             
-            # Step 2: Render PPTX
+            # Step 2: Render PPTX (60% → 95%)
             output_path = self._render_pptx(slidedeck)
             
-            # Step 3: Build report and save result
+            # Step 3: Finalize (95% → 100%)
             report = self._build_report(slidedeck)
             
             job_store.set_result(
@@ -266,7 +298,13 @@ class PipelineRunner:
             return True
             
         except Exception as e:
-            error_msg = f"{type(e).__name__}: {str(e)}"
+            error_msg = str(e)
+            # Simplify error message for users
+            if "API key" in error_msg or "authentication" in error_msg.lower():
+                error_msg = "AI service temporarily unavailable. Please try again later."
+            elif "timeout" in error_msg.lower():
+                error_msg = "Request timed out. Please try again."
+            
             print(f"Pipeline failed for job {self.job_id}: {error_msg}")
             traceback.print_exc()
             job_store.set_failed(self.job_id, error_msg)
@@ -289,4 +327,3 @@ def run_generation_pipeline(job_id: str, prompt: str,
         template_id=template_id
     )
     return runner.run()
-

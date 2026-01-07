@@ -1,17 +1,28 @@
-"""PPTX Engine - 主入口"""
+"""PPTX Engine - Main Entry Point"""
 
 import time
 from typing import Dict, Any, List
 from pptx import Presentation
 from pptx.util import Inches
-from .renderer import SlideRenderer
 from .metrics import LayoutQualityEvaluator, MetricsResult
 from .themes import COLOR_SCHEMES, get_theme, list_themes
 from .overflow import BoundingBox
 
+# Try Pro renderer first, then V2, then V1
+try:
+    from .renderer_pro import SlideRendererPro as SlideRenderer
+    print("[OK] Using Renderer Pro (Meeting-Ready)")
+except ImportError:
+    try:
+        from .renderer_v2 import SlideRendererV2 as SlideRenderer
+        print("[OK] Using Renderer V2 (Professional)")
+    except ImportError:
+        from .renderer import SlideRenderer
+        print("[WARN] Using Renderer V1 (Basic)")
+
 
 class PPTXEngine:
-    """PPTX生成引擎"""
+    """PPTX Generation Engine"""
     
     def __init__(self, theme: str = "corporate_blue"):
         self.theme = get_theme(theme)
@@ -26,8 +37,18 @@ class PPTXEngine:
             prs.slide_height = Inches(self.renderer.HEIGHT)
             
             slides = slidedeck.get('slides', [])
-            for slide_data in slides:
-                self.renderer.render(prs, slide_data)
+            for i, slide_data in enumerate(slides):
+                try:
+                    self.renderer.render(prs, slide_data)
+                except Exception as slide_err:
+                    import traceback
+                    print(f"Error rendering slide {i+1}:")
+                    print(f"  Slide type: {slide_data.get('slide_type', 'unknown')}")
+                    print(f"  Intent: {slide_data.get('intent', 'unknown')}")
+                    print(f"  Title: {slide_data.get('title', 'N/A')[:50]}")
+                    print(f"  Error: {slide_err}")
+                    traceback.print_exc()
+                    raise
             
             prs.save(output_path)
             metrics = self._evaluate(slides)
@@ -41,6 +62,8 @@ class PPTXEngine:
                 'warnings': []
             }
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return {'success': False, 'error_message': str(e), 'warnings': []}
     
     def _evaluate(self, slides: List[Dict]) -> MetricsResult:
@@ -66,7 +89,7 @@ class PPTXEngine:
 
 def generate_pptx(slidedeck_json: Dict, output_path: str,
                   theme: str = "corporate_blue") -> Dict[str, Any]:
-    """便捷函数"""
+    """Convenience function for generating PPTX"""
     engine = PPTXEngine(theme=theme)
     return engine.generate(slidedeck_json, output_path)
 

@@ -33,35 +33,32 @@ Backend API should be running at: http://localhost:8000
 ```
 frontend/
 ├── index.html          # HTML entry
-├── package.json        # Project config and dependencies
-├── vite.config.js      # Vite build config
-├── README.md           # This document
+├── package.json        # Dependencies
+├── vite.config.js      # Vite config
 └── src/
     ├── main.jsx        # React entry
-    ├── App.jsx         # Main app component
-    ├── App.css         # Global styles
+    ├── App.jsx         # Main component
+    ├── App.css         # Styles
     └── api/
-        └── pptApi.js   # API helper functions
+        └── pptApi.js   # API client
 ```
 
 ## Features
 
 - ✅ Text prompt input
 - ✅ Async job creation
-- ✅ Status polling display
-- ✅ Progress bar
+- ✅ Real-time status polling
+- ✅ Smooth progress bar animation
 - ✅ Error handling
 - ✅ PPTX file download
-- ✅ Render report display (collapsible)
 
 ## API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/generate` | POST | Create generation job |
-| `/jobs/{job_id}` | GET | Get job status |
+| `/jobs/{job_id}` | GET | Get job status & progress |
 | `/jobs/{job_id}/download` | GET | Download PPTX file |
-| `/jobs/{job_id}/report` | GET | Get render report |
 
 ## Job Status
 
@@ -77,18 +74,3 @@ frontend/
 - Vite 5
 - Native CSS (no UI framework)
 - Fetch API
-
-## Build for Production
-
-```bash
-npm run build
-```
-
-Output will be in `dist/` directory.
-
-## Preview Production Build
-
-```bash
-npm run preview
-```
-
